@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="description"
+    content="Shop plants, pods, seeds and plant care products from Bloom & Pod."
+  >
+  <title>Shop | Bloom & Pod</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+.catalogue-section{
+  position:relative;
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  overflow:hidden;
+}
+.catalogue-section::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:transparent;
+  pointer-events:none;
+}
+.catalogue-section.has-image::before{
+  background:rgba(0,0,0,.28);
+}
+.catalogue-section > a{
+  position:relative;
+  z-index:1;
+  display:block;
+  color:inherit;
+  text-decoration:none;
+}
+.catalogue-section.has-image{
+  color:#fff;
+}
+.catalogue-section.has-image .eyebrow,
+.catalogue-section.has-image h1,
+.catalogue-section.has-image p{
+  color:#fff;
+}
+.catalogue-badge{
+  display:inline-block;
+  margin-top:10px;
+  padding:5px 10px;
+  border:1px solid currentColor;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+}
+.catalogue-loading,
+.catalogue-empty,
+.catalogue-error{
+  text-align:center;
+}
+/* ==========================================
+   CATALOGUE LIST — STAGGERED FADE-IN
+   ========================================== */
+@keyframes catalogueFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+#catalogueList .catalogue-section {
+  animation: catalogueFadeIn 460ms ease-out both;
+  animation-delay: var(--catalogue-delay, 0ms);
+}
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  #catalogueList .catalogue-section {
+    animation: none;
+  }
+}
+</style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html">
+        <img
+          class="logo"
+          src="images/logo.png"
+          alt="My Brand Logo"
+        >
+        <span>Bloom &amp; Pod</span>
+      </a>
+      <button
+        class="menu-toggle"
+        aria-label="Open navigation"
+        aria-expanded="false"
+      >
+        ☰
+      </button>
+      <nav class="nav" aria-label="Primary navigation">
+        <details class="header-search" id="header-search">
+          <summary aria-label="Open product search" title="Search products">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+          </summary>
+
+          <div class="header-search-panel">
+            <label for="header-search-input">Search products</label>
+            <div class="header-search-field">
+              <input
+                id="header-search-input"
+                type="search"
+                placeholder="Search plants, seeds, pods..."
+                autocomplete="off"
+              >
+              <button type="button" aria-label="View search results">
+                &rarr;
+              </button>
+            </div>            
+            <div
+              id="header-search-results"
+              class="header-search-results"
+              aria-live="polite"
+              aria-label="Product search suggestions"
+              hidden
+            ></div>
+          </div>
+        </details>
+        <a href="index.html">Home</a>
+        <a class="active" href="products.html">Shop</a>
+        <a href="index.html#about">About</a>
+        <a href="customer-order.html">Track Order</a>
+        <a class="cart-link" href="cart.html">
+          Cart <span class="cart-count">0</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+  <main>
+  <div id="catalogueList">
+    <section class="page-hero hero-gap product-hero-pad">
+      <div class="container">
+        <p>
+          Loading catalogues...
+        </p>
+      </div>
+    </section>
+  </div>
+</main>
+  <footer class="site-footer">
+    <div class="container footer-policies" aria-label="Store policies">
+      <div class="footer-policies-heading">Policies</div>
+      <nav class="footer-policies-links" aria-label="Policy pages">
+      <a class="footer-policy-link" href="terms-and-conditions.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9z"/><path d="M8 3v6h6"/><path d="M8 14h8M8 18h8"/></svg>
+        <span>Terms &amp; Conditions</span>
+      </a>
+      <a class="footer-policy-link" href="cancellation-policy.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3"/><path d="M8 10h6M8 14h4"/><path d="m16 9 5 5m0-5-5 5"/></svg>
+        <span>Cancellation Policy</span>
+      </a>
+      <a class="footer-policy-link" href="refund-return-policy.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11a9 9 0 1 1 2.8 6.5"/><path d="M3 4v7h7"/><path d="m9 12 2 2 4-4"/></svg>
+        <span>Refund &amp; Return</span>
+        <a class="footer-policy-link" href="privacy-policy.html"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg><span>Privacy Policy</span></a></nav>
+      </a>
+      </nav>
+    </div>
+    <div class="container footer-bottom">
+      <span>
+        © <span id="year"></span> Bloom &amp; Pod
+      </span>
+      <a href="index.html">
+        Back to home
+      </a>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
+<script src="supabase-client.js"></script>
+<script src="script.js?v=2026-10-11.1"></script>
+<script>
+function escapeCatalogueHtml(value){
+  return String(value ?? '')
+    .replace(
+      /[&<>"']/g,
+      char => ({
+        '&':'&amp;',
+        '<':'&lt;',
+        '>':'&gt;',
+        '"':'&quot;',
+        "'":'&#039;'
+      }[char])
+    );
+}
+function getCatalogueUrl(slug){
+  return (
+    'catalogue.html?catalogue=' +
+    encodeURIComponent(slug)
+  );
+}
+async function loadCatalogues(){
+  const container =
+    document.getElementById(
+      'catalogueList'
+    );
+  if(!container){
+    return;
+  }
+  try{
+    const { data, error } =
+      await window.bpSupabase
+        .from('catalogues')
+        .select(`
+          id,
+          name,
+          slug,
+          eyebrow,
+          description,
+          image_url,
+          badge,
+          display_order,
+          active
+        `)
+        .eq('active', true)
+        .order(
+          'display_order',
+          {
+            ascending:true
+          }
+        );
+    if(error){
+      throw error;
+    }
+    const catalogues =
+      data || [];
+    if(!catalogues.length){
+      container.innerHTML = `
+        <section
+          class="page-hero hero-gap product-hero-pad"
+        >
+          <div class="container catalogue-empty">
+            <p>
+              No catalogues are currently available.
+            </p>
+          </div>
+        </section>
+      `;
+      return;
+    }
+    container.innerHTML =
+      catalogues
+        .map(
+          (catalogue, index) => {
+            const image =
+              String(
+                catalogue.image_url || ''
+              ).trim();
+            const badge =
+              String(
+                catalogue.badge || ''
+              ).trim();
+            const sectionClasses = [
+  'page-hero',
+  'hero-gap',
+  'product-hero-pad',
+  'catalogue-section'
+];
+            if(image){
+              sectionClasses.push(
+                'has-image'
+              );
+            }
+                  return `
+                    <section
+                      class="${sectionClasses.join(' ')}"
+                      style="
+                        ${image
+                          ? `background-image:url('${escapeCatalogueHtml(image)}');`
+                          : ''}
+                        --catalogue-delay:${index * 100}ms;
+                      "
+                    >
+                <a
+                  href="${getCatalogueUrl(
+                    catalogue.slug
+                  )}"
+                >
+                  <div class="container">
+                    ${
+                      catalogue.eyebrow
+                        ? `
+                          <p class="eyebrow">
+                            ${
+                              escapeCatalogueHtml(
+                                catalogue.eyebrow
+                              )
+                            }
+                          </p>
+                        `
+                        : ''
+                    }
+                    <h1>
+                      ${
+                        escapeCatalogueHtml(
+                          catalogue.name
+                        )
+                      }
+                    </h1>
+                    ${
+  catalogue.description
+    ? `
+      <div class="catalogue-list-description">
+        ${
+          typeof sanitizeRichTextHtml ===
+          'function'
+            ? sanitizeRichTextHtml(
+                catalogue.description
+              )
+            : ''
+        }
+      </div>
+    `
+    : ''
+}
+                    ${
+                      badge
+                        ? `
+                          <p>
+                            <span class="catalogue-badge">
+                              ${
+                                escapeCatalogueHtml(
+                                  badge
+                                )
+                              }
+                            </span>
+                          </p>
+                        `
+                        : ''
+                    }
+                    <p>
+                      ⮩ Click to browse catalogue.
+                    </p>
+                  </div>
+                </a>
+              </section>
+            `;
+          }
+        )
+        .join('');
+  } catch(error){
+    console.error(
+      'Catalogue loading failed:',
+      error
+    );
+    container.innerHTML = `
+      <section
+        class="page-hero hero-gap product-hero-pad"
+      >
+        <div class="container catalogue-error">
+          <p>
+            Catalogues could not be loaded.
+            Please refresh the page.
+          </p>
+        </div>
+      </section>
+    `;
+  }
+}
+document.addEventListener(
+  'DOMContentLoaded',
+  loadCatalogues
+);
+</script>
+  <script>
+    history.scrollRestoration = 'manual';
+    window.scrollTo(0, 0);
+  </script>
+</body>
+</html>

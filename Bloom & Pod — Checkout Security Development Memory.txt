@@ -1,0 +1,428 @@
+# Bloom & Pod — Checkout Security Development Memory
+
+**Last updated:** 17 October 2026  
+**Project:** Bloom & Pod ecommerce website  
+**Technology:** HTML, CSS, JavaScript, Supabase (Database, Auth, Storage, Edge Functions), Cloudflare Turnstile
+
+## 1. Current Development Status
+
+Bloom & Pod's secure checkout development has completed **Layer 1 (Secure Checkout Gateway)** and **Layer 2 (Cloudflare Turnstile)**.
+
+Both layers are enabled and have passed one controlled end-to-end checkout test on localhost.
+
+**Layer 3 (Rate Limiting)** and **Layer 4 (HTTP Header / Network Protection)** remain postponed pending further investigation and Supabase's response.
+
+Customer registration and mandatory login have been discussed as possible alternatives but have **not been approved or implemented**.
+
+Development must continue incrementally, one step at a time. Do not change the working checkout or implement postponed security features without explicit approval.
+
+---
+
+## 2. Layer 1 — Secure Checkout Gateway
+
+**Status: COMPLETED, ENABLED AND TESTED**
+
+### Architecture
+
+Previously, the frontend could call the Supabase PostgreSQL function `public.place_order()` directly.
+
+This was replaced with a protected server-side order creation pathway:
+
+Customer browser → `create-customer-order` Edge Function → `public.place_order()` → Database.
+
+### Implemented protections
+
+- The frontend calls the Supabase Edge Function `create-customer-order` to create orders.
+- The Edge Function validates checkout requests before invoking the database function.
+- The Edge Function uses server-side Supabase credentials to execute the protected RPC.
+- The PostgreSQL `place_order()` function retains authoritative pricing, tax, delivery, inventory, and order-creation logic.
+- The existing idempotency system protects against duplicate creation using the same idempotency key.
+- Order and inventory changes occur within the database transaction.
+- No fallback to direct browser RPC is permitted when secure checkout is enabled.
+
+### Active configuration
+
+Frontend `order-confirmation.js`:
+
+`ENABLE_SECURE_CHECKOUT = true`
+
+Backend `create-customer-order/index.ts`:
+
+`ENABLE_PROTECTED_ORDER_CREATION = true`
+
+The Edge Function currently has Supabase gateway **Verify JWT disabled**, because checkout supports guest customers. This is an intentional configuration and does not mean the endpoint has no security checks.
+
+### Database permissions
+
+Execution permission for `public.place_order(text × 12, jsonb)` was revoked from:
+
+- `PUBLIC`
+- `anon`
+- `authenticated`
+
+Read-only verification confirmed:
+
+| Role | Can execute |
+|---|---|
+| anon | No |
+| authenticated | No |
+| service_role | Yes |
+
+Direct browser access to the order-creation RPC is therefore restricted.
+
+These permissions must not be reversed casually.
+
+---
+
+## 3. Layer 2 — Cloudflare Turnstile
+
+**Status: COMPLETED, ENABLED AND TESTED**
+
+### Current implementation
+
+Cloudflare Turnstile is integrated into the Order Confirmation page.
+
+The frontend:
+
+- Displays the Turnstile widget.
+- Keeps the Place Order button disabled until successful verification.
+- Sends the resulting Turnstile token to `create-customer-order`.
+- Requires new verification after page refresh.
+- Does not fall back to unsecured order submission.
+
+The Edge Function:
+
+- Verifies Turnstile tokens server-side using Cloudflare Siteverify.
+- Validates the verification result.
+- Checks the expected Turnstile action.
+- Checks the allowed hostname.
+- Rejects unsuccessful verification before executing `place_order()`.
+
+### Allowed hostnames
+
+- `localhost`
+- `bloomandpod.com`
+- `www.bloomandpod.com`
+
+The current website was tested using the local PowerShell HttpListener development server.
+
+### Limitation
+
+Turnstile substantially reduces automated order submissions, but it is not a complete replacement for rate limiting or upstream denial-of-service protection.
+
+---
+
+## 4. Controlled End-to-End Checkout Test
+
+**Status: PASSED**
+
+**Test date:** 17 October 2026  
+**Order ID:** `BP-20261017-001068`  
+**Final amount:** ₹4,667.39  
+**Payment method:** Cash on Delivery
+
+### Verified order totals
+
+| Component | Amount |
+|---|---:|
+| Base subtotal | ₹3,840.00 |
+| Product GST | ₹691.20 |
+| Product total | ₹4,531.20 |
+| Handling charge | ₹20.50 |
+| Handling GST | ₹3.69 |
+| Final GST total | ₹694.89 |
+| Delivery charge | ₹112.00 |
+| Final order total | ₹4,667.39 |
+
+### Product and inventory verification
+
+| Product | Ordered | Stock before | Stock after |
+|---|---:|---:|---:|
+| Dried Pods | 10 | 769 | 759 |
+| Dried Rosess | 7 | 127 | 120 |
+
+The existing audit table is:
+
+`public.inventory_adjustment_history`
+
+Both products had matching `order_placed` inventory audit records with the correct deductions.
+
+The test also confirmed that:
+
+- Turnstile loaded correctly.
+- The Place Order button remained disabled before verification.
+- Order submission succeeded.
+- The success popup appeared.
+- The order was saved in `public.orders`.
+- Purchased product details were saved in `public.order_items`.
+- GST, handling charges, and totals reconciled.
+- Inventory deductions matched the audit records.
+- No duplicate inventory deductions were observed in the returned audit records.
+
+**Conclusion:** The completed Layers 1 and 2 successfully created and recorded an order through the protected checkout pathway.
+
+A single successful end-to-end test does not replace a comprehensive security audit or additional failure-path testing.
+
+---
+
+## 5. Confirmation Email — Separate Outstanding Issue
+
+The test order used a dummy email address.
+
+The `order-confirmation` Edge Function was invoked, but Resend rejected the email because the account was operating under testing restrictions.
+
+Resend currently permits testing emails only to the authorized recipient address until a sending domain is verified.
+
+Before public launch:
+
+- Verify the sending domain in Resend.
+- Configure the confirmation email's `from` address using the verified domain.
+- Test successful email delivery using an authorized recipient.
+
+The test order's `confirmation_status` was `Pending`.
+
+This issue is separate from the secure checkout gateway and Turnstile verification. No changes to Layers 1 or 2 were required to explain the failure.
+
+---
+
+## 6. Layer 3 — Rate Limiting
+
+**Status: POSTPONED — NOT IMPLEMENTED**
+
+### Main security concern
+
+The public `create-customer-order` Edge Function remains accessible to browser console requests, scripts, and other HTTP clients.
+
+Although the existing protections reject requests without valid Turnstile verification, they do not fully prevent:
+
+- High-frequency requests against the public endpoint.
+- Abuse involving repeated fresh Turnstile tokens.
+- Numerous new orders using different valid idempotency keys.
+- Resource exhaustion caused by excessive requests.
+
+The main objective of Layer 3 is to limit excessive order-submission attempts and reduce automated fake-order abuse.
+
+### Previously prepared components
+
+The Edge Function contains a reserved client-IP identification mechanism that currently returns `null` rather than trusting unverified request headers.
+
+HMAC-related functionality and the previously prepared `check_order_submission_limit` database function were discussed as potential components.
+
+These protections were intentionally not connected to the active checkout pathway because the trusted client-IP source had not been established.
+
+### Potential rate-limiting strategy
+
+The following options were discussed but not finalized:
+
+- Verified client-IP-based limits if the infrastructure trust boundary is confirmed.
+- Privacy-preserving HMAC identifiers derived from normalized customer phone numbers.
+- Shared PostgreSQL or Redis counters with atomic updates.
+- Limits on order-submission attempts, not just successful orders.
+- Broader endpoint-level safeguards.
+- Multiple rate-limiting signals rather than relying on a single identifier.
+
+Phone numbers are customer-supplied and can be changed; therefore, phone-based rate limiting is not a perfect replacement for trusted IP-based protection.
+
+An endpoint-wide limit can also affect legitimate customers during an attack.
+
+No specific limits, thresholds, time windows, or database changes have been approved.
+
+---
+
+## 7. Layer 4 — HTTP Header / Network Protection
+
+**Status: POSTPONED — AWAITING SUPABASE CLARIFICATION**
+
+### Main unresolved issue
+
+How can a Supabase-hosted Edge Function reliably determine the genuine client IP address without trusting attacker-controlled HTTP headers?
+
+The headers discussed were:
+
+`X-Forwarded-For`
+
+`CF-Connecting-IP`
+
+### X-Forwarded-For
+
+A client may be able to supply an arbitrary value for this header.
+
+Depending on proxy configuration, intermediary proxies may append additional addresses.
+
+Therefore, blindly using the first address in the header is unsafe.
+
+Selecting another address is also not automatically safe unless the trusted proxy chain and its handling of forwarded headers are known.
+
+### CF-Connecting-IP
+
+Cloudflare commonly supplies `CF-Connecting-IP` to communicate the connecting client's address.
+
+However, we have not established a definitive guarantee that Supabase's Edge Function infrastructure always replaces or sanitizes client-supplied values before exposing this header to user functions.
+
+Consequently, its authenticity must not be assumed solely because the header exists.
+
+### Supabase support
+
+A clarification request has been raised with Supabase.
+
+**As of 17 October 2026, Supabase has not responded.**
+
+The unresolved questions are:
+
+1. Does Supabase sanitize, overwrite, or append incoming `X-Forwarded-For` values?
+2. Is `CF-Connecting-IP` guaranteed to be provided by trusted infrastructure for hosted Edge Functions?
+3. Can an external client spoof `CF-Connecting-IP` in the header received by an Edge Function?
+4. Does Supabase provide a documented, trustworthy alternative for accessing the real client IP?
+
+### Reddit discussions
+
+Several Reddit comments were reviewed.
+
+The useful conclusions were:
+
+- Do not blindly trust user-supplied forwarding headers.
+- Trusted proxy configuration matters more than the header's name.
+- `CF-Connecting-IP` may be more promising than `X-Forwarded-For`.
+- The runtime's apparent connection address may belong to an intermediary proxy.
+- Rate limiting should use multiple signals where practical.
+- Shared storage is required for consistent limits across Edge Function instances.
+
+Some commenters proposed sending deliberately forged header values to a diagnostic Edge Function and comparing the values received.
+
+This experiment was **discussed but not executed**.
+
+If conducted later, it should use a separate, non-order-creating diagnostic function and inspect only necessary header values. It must not expose authorization credentials, cookies, or sensitive request data.
+
+Testing observed behavior would not substitute for a documented platform guarantee.
+
+### Distinction regarding HTTP security headers
+
+Traditional response security headers, such as Content-Security-Policy and Strict-Transport-Security, are a separate concern from identifying a requester's IP.
+
+Those response headers can be evaluated independently of the `CF-Connecting-IP` question.
+
+---
+
+## 8. Alternative Architecture — Mandatory Customer Login
+
+**Status: DISCUSSION ONLY — NOT APPROVED**
+
+We discussed whether Bloom & Pod should require customers to register and log in before placing orders.
+
+The existing technology stack already includes Supabase Authentication, but mandatory customer authentication is not currently part of checkout.
+
+### Potential benefits
+
+With mandatory customer login:
+
+- The Edge Function could verify the customer's Supabase Auth session.
+- Rate limits could use the verified Supabase user ID as the primary identity.
+- Primary account-based limits would no longer depend on IP headers.
+- Unauthenticated order creation could be prohibited server-side.
+- Multiple requests from the same account could be limited using shared counters.
+
+### Security limitations
+
+Mandatory login would not completely prevent:
+
+- Customers making API requests through the browser console.
+- Attackers creating multiple accounts.
+- Distributed automated requests.
+- Large-scale request flooding before authentication checks complete.
+
+Account-based rate limiting would still need to be implemented. JWT verification alone is not rate limiting.
+
+### JWT configuration considerations
+
+The deployed `create-customer-order` Edge Function currently supports guest requests with Supabase gateway JWT verification disabled.
+
+If mandatory login is approved later, customer authentication should be implemented and tested before altering the live checkout's authentication requirements.
+
+The backend must verify the actual customer's session and derive their identity from a verified token. A public Supabase API key or user ID supplied by frontend JavaScript is not proof of an authenticated customer.
+
+Existing database protections, Turnstile, idempotency, server-side calculations, and inventory handling must be preserved.
+
+### Business considerations
+
+Requiring registration introduces additional development and customer-facing friction.
+
+It also requires registration, login, logout, session management, account recovery, and abuse protection for account creation.
+
+**No decision has been made to require customer accounts.**
+
+Do not implement mandatory login or change JWT settings without explicit approval.
+
+---
+
+## 9. Alternative Architecture — Trusted Cloudflare Gateway
+
+**Status: DISCUSSION ONLY**
+
+Another possible approach is to place a controlled Cloudflare Worker or gateway between the browser and the Supabase Edge Function.
+
+A properly secured gateway could:
+
+- Apply rate limiting before requests reach Supabase.
+- Read client-IP information at a defined trusted ingress.
+- Authenticate forwarded requests using server-held credentials or cryptographic signatures.
+- Require the Supabase order-creation function to reject requests bypassing the gateway.
+
+This would introduce additional infrastructure, authentication and replay-protection requirements, and frontend/backend changes.
+
+It was discussed as an alternative if Supabase cannot provide a reliable client-IP trust guarantee.
+
+**No gateway implementation has been approved.**
+
+---
+
+## 10. Security Principles Established
+
+1. A public frontend or API endpoint cannot be made inaccessible to browser-console requests simply by hiding buttons or pages.
+2. Security checks must be enforced server-side.
+3. Turnstile helps prevent automated submissions but does not replace rate limiting.
+4. Idempotency prevents duplicate orders using the same key; it is not a general rate limiter.
+5. Authentication identifies a verified account but does not automatically restrict request frequency.
+6. IP-based controls should rely only on a verified proxy trust boundary.
+7. Protecting database order creation and protecting infrastructure against request floods are different problems.
+8. Application-level rate limiting cannot completely replace upstream network and DDoS protections.
+9. Keep inventory and order creation within the established database transaction.
+10. Preserve the successfully tested checkout implementation unless a specific change is approved.
+
+---
+
+## 11. Current Decisions and Next Steps
+
+### Confirmed decisions
+
+- Layer 1 is completed, enabled, and tested.
+- Layer 2 is completed, enabled, and tested.
+- Layer 3 remains postponed.
+- Layer 4 remains postponed.
+- Continue waiting for Supabase's response regarding trusted client-IP headers.
+- Do not assume `CF-Connecting-IP` is trustworthy without adequate evidence.
+- Do not require customer login at this stage.
+- Do not enable customer-authentication requirements on the deployed order function yet.
+- Do not change the working checkout implementation merely because alternative architectures have been discussed.
+
+### Pending decisions
+
+- Whether Supabase provides a trustworthy client-IP source.
+- Whether to conduct an isolated diagnostic header-spoofing experiment.
+- Whether Bloom & Pod should retain guest checkout or introduce mandatory customer login.
+- Which rate-limit identifiers, counters, thresholds, and safeguards should be used.
+- Whether additional Cloudflare network-layer protection is necessary.
+- When to complete Resend domain verification and confirmation-email testing.
+
+### Development instructions for future conversations
+
+**The latest production code and database definitions supplied in the active conversation remain the source of truth.**
+
+Before recommending changes, examine the relevant current files and existing SQL definitions.
+
+Follow the established incremental workflow: discuss the proposed design, approve one step, implement it, and verify the result before proceeding.
+
+Do not repeat the completed Supabase migration or rebuild Layers 1 and 2 unnecessarily.
+
+Do not perform live order-creation tests, make order-creation API calls, or modify database records without explicit authorization.
+
+**Current project security milestone: Layers 1 and 2 completed; Layers 3 and 4 deferred pending further investigation and decisions.**

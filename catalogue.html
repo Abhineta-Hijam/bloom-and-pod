@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <meta
+    name="description"
+    content="Shop Bloom & Pod products."
+  >
+  <title>Catalogue | Bloom & Pod</title>
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+  <style>
+    /*
+     * Catalogue header.
+     *
+     * Uses the banner image configured in
+     * Admin → Catalogue.
+     */
+    .catalogue-page-hero{
+      position:relative;
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      overflow:hidden;
+    }
+    .catalogue-page-hero.has-image::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(
+          90deg,
+          rgba(20,35,24,.72),
+          rgba(20,35,24,.35)
+        );
+      pointer-events:none;
+    }
+    .catalogue-page-hero.has-image{
+      color:#fff;
+    }
+    .catalogue-page-hero.has-image .container{
+      position:relative;
+      z-index:1;
+    }
+    .catalogue-page-hero.has-image h1,
+    .catalogue-page-hero.has-image p,
+    .catalogue-page-hero.has-image .eyebrow{
+      color:#fff;
+    }
+    .catalogue-page-badge{
+      display:none;
+      width:max-content;
+      margin-top:14px;
+      padding:6px 11px;
+      border:1px solid currentColor;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+    }
+    .catalogue-page-badge.visible{
+      display:inline-block;
+    }
+    .catalogue-invalid{
+      padding:70px 20px;
+      text-align:center;
+    }
+    .product-image-static{
+      cursor:default;
+    }
+  </style>
+  <style>
+    .catalogue-rich-description{
+      max-width:100%;
+      min-width:0;
+      white-space:normal;
+      overflow-wrap:anywhere;
+      word-break:normal;
+    }
+    .catalogue-rich-description p{
+      margin:0 0 10px;
+    }
+    .catalogue-rich-description p:last-child{
+      margin-bottom:0;
+    }
+    .catalogue-rich-description ul,
+    .catalogue-rich-description ol{
+      margin:8px 0 12px;
+      padding-left:22px;
+    }
+    .catalogue-rich-description li{
+      margin:3px 0;
+    }
+    .catalogue-rich-description a{
+      overflow-wrap:anywhere;
+    }
+  </style>
+  <style>
+    /* ==========================================================
+       FLOATING CATALOGUE NAVIGATOR
+       ========================================================== */
+    .catalogue-floater{
+    position:fixed;
+    left:10px;
+    bottom:20px;
+    z-index:9998;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+    transition: bottom .18s ease;
+    }
+    .catalogue-floater-toggle{
+  position:relative;
+  width:50px;
+  height:50px;
+  padding:0;
+  border:0;
+  background:transparent;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:
+    transform .18s ease,
+    filter .18s ease;
+}
+    .catalogue-floater-toggle:hover,
+.catalogue-floater.is-open
+.catalogue-floater-toggle{
+  transform:
+    translateY(-3px)
+    scale(1.06);
+  filter:
+    drop-shadow(
+      0 8px 10px
+      rgba(0,0,0,.20)
+    );
+}
+    .catalogue-floater-panel{
+      position:absolute;
+      left:0;
+      bottom:60px;
+      width:min(200px, calc(100vw - 44px));
+      max-height:min(60vh, 420px);
+      overflow-y:auto;
+      padding:8px;
+      border:1px solid var(--line, #e7e1d6);
+      border-radius:16px;
+      background:var(--paper, #fffdf9);
+      box-shadow:
+        0 18px 50px rgba(37,49,38,.16),
+        0 4px 14px rgba(37,49,38,.08);
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+      transform:
+        translateY(10px)
+        scale(.96);
+      transform-origin:
+        left bottom;
+      transition:
+        opacity .16s ease,
+        visibility .16s ease,
+        transform .38s cubic-bezier(.34,1.36,.64,1);
+    }
+    .catalogue-floater.is-open
+    .catalogue-floater-panel,
+    .catalogue-floater:hover
+    .catalogue-floater-panel,
+    .catalogue-floater:focus-within
+    .catalogue-floater-panel{
+      opacity:1;
+      visibility:visible;
+      pointer-events:auto;
+      transform:
+        translateY(0)
+        scale(1);
+    }
+    .catalogue-floater-list{
+      display:grid;
+      gap:3px;
+    }
+    .catalogue-floater-link{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      width:100%;
+      min-height:42px;
+      padding:9px 12px;
+      border-radius:10px;
+      color:var(--ink, #253126);
+      text-decoration:none;
+      font-size:13px;
+      font-weight:600;
+      line-height:1.3;
+      transition:
+        background .15s ease,
+        color .15s ease,
+        transform .15s ease;
+    }
+    .catalogue-floater-link:hover{
+      background:var(--cream, #f7f3eb);
+      color:var(--accent-dark, #4e644c);
+      transform:translateX(2px);
+    }
+    .catalogue-floater-link.is-current{
+      background:#e9eee6;
+      color:var(--accent-dark, #4e644c);
+      font-weight:700;
+      cursor:default;
+    }
+    .catalogue-floater-current-dot{
+      width:8px;
+      height:8px;
+      flex:0 0 8px;
+      border-radius:50%;
+      background:currentColor;
+    }
+    .catalogue-floater-link:not(.is-current)
+    .catalogue-floater-current-dot{
+      opacity:0;
+    }
+    .catalogue-floater-empty{
+      padding:12px;
+      color:var(--muted, #687268);
+      font-size:12px;
+    }
+    @media(max-width:600px){
+  .catalogue-floater{
+    left:8px;
+    bottom:16px;
+  }
+  .catalogue-floater-toggle{
+    width:48px;
+    height:48px;
+  }
+  .catalogue-floater-panel{
+    bottom:58px;
+    width:min(250px, calc(100vw - 28px));
+  }
+}
+    @media(prefers-reduced-motion:reduce){
+      .catalogue-floater-toggle,
+      .catalogue-floater-panel,
+      .catalogue-floater-link{
+        transition:none !important;
+      }
+    }
+    .catalogue-floater-image{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  pointer-events:none;
+  transform-origin:center;
+}
+.catalogue-floater-toggle:hover
+.catalogue-floater-image{
+  animation:catalogue-wiggle 1.45s ease;
+}
+@keyframes catalogue-wiggle{
+  0%{
+    transform:rotate(0deg);
+  }
+  30%{
+    transform:rotate(12deg);
+  }
+  65%{
+    transform:rotate(-10deg);
+  }
+  100%{
+    transform:rotate(0deg);
+  }
+}
+  </style>
+<style>
+
+/* Featured Carousel destination — soft green pulse */
+
+.product-card.product-card-pulse {
+  animation: productCardPulse 0.8s ease-in-out 3;
+}
+
+@keyframes productCardPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(47, 107, 63, 0);
+  }
+
+  45% {
+    box-shadow:
+      0 0 0 8px rgba(47, 107, 63, 0.18),
+      0 0 24px rgba(47, 107, 63, 0.22);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-card.product-card-pulse {
+    animation: none;
+  }
+}
+
+</style>
+  <style>
+    /* CATALOGUE PAGE — STAGGERED ENTRANCE */
+    @keyframes cataloguePageFadeIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .catalogue-page-enter,
+    #products .product-card.catalogue-card-enter {
+      animation: cataloguePageFadeIn 460ms ease-out both;
+      animation-delay: var(--catalogue-delay, 0ms);
+    }
+
+    /* The existing destination pulse takes priority when used. */
+    #products .product-card.catalogue-card-enter.product-card-pulse {
+      animation: productCardPulse 0.8s ease-in-out 3;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .catalogue-page-enter,
+      #products .product-card.catalogue-card-enter {
+        animation: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a
+        class="brand"
+        href="index.html"
+      >
+        <img
+          class="logo"
+          src="images/logo.png"
+          alt="My Brand Logo"
+        >
+        <span>
+          Bloom &amp; Pod
+        </span>
+      </a>
+      <button
+        class="menu-toggle"
+        aria-label="Open navigation"
+        aria-expanded="false"
+      >
+        ☰
+      </button>
+      <nav
+        class="nav"
+        aria-label="Primary navigation"
+      >
+      <details class="header-search" id="header-search">
+          <summary aria-label="Open product search" title="Search products">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+          </summary>
+
+          <div class="header-search-panel">
+            <label for="header-search-input">Search products</label>
+            <div class="header-search-field">
+              <input
+                id="header-search-input"
+                type="search"
+                placeholder="Search plants, seeds, pods..."
+                autocomplete="off"
+              >
+              <button type="button" aria-label="View search results">
+                &rarr;
+              </button>
+            </div>            
+          <div
+            id="header-search-results"
+            class="header-search-results"
+            aria-live="polite"
+            aria-label="Product search suggestions"
+            hidden
+          ></div>
+          </div>
+        </details>
+        <a href="index.html">
+          Home
+        </a>
+        <a
+          class="active"
+          href="products.html"
+        >
+          Shop
+        </a>
+        <a href="index.html#about">
+          About
+        </a>
+        <a href="customer-order.html">
+          Track Order
+        </a>
+        <a
+          class="cart-link"
+          href="cart.html"
+        >
+          Cart
+          <span class="cart-count">
+            0
+          </span>
+        </a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <!--
+      CATALOGUE HEADER
+      Content is populated from the
+      catalogues table.
+    -->
+    <section
+      id="catalogueHero"
+      class="page-hero hero-gap product-hero-pad catalogue-page-hero"
+    >
+      <div class="container">
+        <p
+          id="catalogueEyebrow"
+          class="eyebrow"
+        >
+        </p>
+        <h1 id="catalogueTitle">
+          Loading...
+        </h1>
+        <div
+          id="catalogueDescription"
+          class="catalogue-rich-description"
+        >
+        </div>
+        <div
+          id="catalogueBadge"
+          class="catalogue-page-badge"
+        >
+        </div>
+      </div>
+    </section>
+    <!-- PRODUCT AREA -->
+    <section class="section">
+      <div class="container">
+        <!-- FILTERS -->
+        <div class="shop-toolbar">
+  <div></div>
+  <div class="shop-filters">
+    <label>
+      ☰
+      <select id="filter-category">
+        <option value="all">
+          All categories
+        </option>
+      </select>
+    </label>
+    <label>
+      Sort
+      <select id="sort-products">
+        <option value="featured">
+          Featured
+        </option>
+        <option value="name-asc">
+          Name: A–Z
+        </option>
+        <option value="name-desc">
+          Name: Z–A
+        </option>
+        <option value="price-asc">
+          Price: Low to High
+        </option>
+        <option value="price-desc">
+          Price: High to Low
+        </option>
+      </select>
+    </label>
+  </div>
+</div>
+        <p
+            id="product-count"
+            class="product-count"
+        ></p>
+        <!-- PRODUCTS -->
+        <div
+          id="products"
+          class="product-grid"
+        >
+        </div>
+        <!-- LOAD MORE -->
+        <div
+          style="
+            display:flex;
+            justify-content:center;
+            margin-top:28px;
+          "
+        >
+          <button
+            id="load-more-products"
+            class="btn secondary"
+            type="button"
+          >
+            Load more
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <!-- PRODUCT MODAL -->
+  <div
+    id="product-modal"
+    class="product-modal"
+    hidden
+    aria-hidden="true"
+  >
+    <div class="product-modal-box">
+      <button
+        id="product-modal-close"
+        class="product-modal-close"
+        type="button"
+        aria-label="Close product details"
+      >
+        ×
+      </button>
+      <div class="product-modal-scroll">
+        <div class="product-modal-content">
+          <p
+            id="product-modal-category"
+            class="eyebrow"
+          >
+          </p>
+          <h2 id="product-modal-name">
+          </h2>
+          <div
+            id="product-modal-description"
+            class="product-modal-description"
+          >
+          </div>
+          <div class="product-modal-extra">
+            <strong>
+              Additional information
+            </strong>
+            <p id="product-modal-blooms">
+            </p>
+          </div>
+          <div class="product-modal-image-wrap">
+            <button
+              id="product-modal-prev"
+              class="product-modal-image-arrow product-modal-image-prev"
+              type="button"
+              aria-label="Previous product image"
+              hidden
+            >
+              &#10094;
+            </button>
+            <img
+              id="product-modal-image"
+              class="product-modal-image"
+              src=""
+              alt=""
+            >
+            <button
+              id="product-modal-next"
+              class="product-modal-image-arrow product-modal-image-next"
+              type="button"
+              aria-label="Next product image"
+              hidden
+            >
+              &#10095;
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- FLOATING CATALOGUE NAVIGATOR -->
+  <div
+    id="catalogueFloater"
+    class="catalogue-floater"
+  >
+    <div
+      id="catalogueFloaterPanel"
+      class="catalogue-floater-panel"
+      aria-hidden="true"
+    >
+      <div
+        id="catalogueFloaterList"
+        class="catalogue-floater-list"
+      >
+        <div class="catalogue-floater-empty">
+          Loading catalogues...
+        </div>
+      </div>
+    </div>
+    <button
+  id="catalogueFloaterToggle"
+  class="catalogue-floater-toggle"
+  type="button"
+  aria-label="Browse catalogues"
+  aria-expanded="false"
+  aria-controls="catalogueFloaterPanel"
+>
+  <img
+    class="catalogue-floater-image"
+    src="images/flaticon-leaf-icon.png"
+    alt=""
+  >
+</button>
+  </div>
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-policies" aria-label="Store policies">
+      <div class="footer-policies-heading">Policies</div>
+      <nav class="footer-policies-links" aria-label="Policy pages">
+      <a class="footer-policy-link" href="terms-and-conditions.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9z"/><path d="M8 3v6h6"/><path d="M8 14h8M8 18h8"/></svg>
+        <span>Terms &amp; Conditions</span>
+      </a>
+      <a class="footer-policy-link" href="cancellation-policy.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3"/><path d="M8 10h6M8 14h4"/><path d="m16 9 5 5m0-5-5 5"/></svg>
+        <span>Cancellation Policy</span>
+      </a>
+      <a class="footer-policy-link" href="refund-return-policy.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11a9 9 0 1 1 2.8 6.5"/><path d="M3 4v7h7"/><path d="m9 12 2 2 4-4"/></svg>
+        <span>Refund &amp; Return</span>
+      </a>
+      <a class="footer-policy-link" href="privacy-policy.html"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg><span>Privacy Policy</span></a></nav>
+      </nav>
+    </div>
+    <div class="container footer-bottom">
+      <span>
+        ©
+        <span id="year"></span>
+        Bloom &amp; Pod
+      </span>
+      <a href="products.html">
+        Back to shop
+      </a>
+    </div>
+  </footer>
+  <!-- SHARED STORE SCRIPTS -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"
+  ></script>
+  <script src="supabase-client.js"></script>
+  <script src="script.js?v=2026-10-11.1"></script>
+  <!-- CATALOGUE PAGE INITIALISATION -->
+  <script>
+    function sanitizeCatalogueRichText(value){
+      /*
+       * Prefer the shared storefront sanitizer
+       * from script.js when available.
+       */
+      if(
+        typeof sanitizeRichTextHtml ===
+        'function'
+      ){
+        return sanitizeRichTextHtml(
+          value || ''
+        );
+      }
+      const template =
+        document.createElement(
+          'template'
+        );
+      template.innerHTML =
+        String(value || '');
+      const allowedTags =
+        new Set([
+          'P',
+          'BR',
+          'STRONG',
+          'B',
+          'EM',
+          'I',
+          'U',
+          'UL',
+          'OL',
+          'LI',
+          'A'
+        ]);
+      const blockedTags =
+        new Set([
+          'SCRIPT',
+          'STYLE',
+          'IFRAME',
+          'OBJECT',
+          'EMBED',
+          'SVG',
+          'MATH',
+          'FORM',
+          'INPUT',
+          'BUTTON',
+          'TEXTAREA',
+          'SELECT',
+          'OPTION'
+        ]);
+      function cleanNode(node){
+        if(
+          node.nodeType ===
+          Node.TEXT_NODE
+        ){
+          return;
+        }
+        if(
+          node.nodeType !==
+          Node.ELEMENT_NODE
+        ){
+          node.remove();
+          return;
+        }
+        const tag =
+          node.tagName.toUpperCase();
+        if(blockedTags.has(tag)){
+          node.remove();
+          return;
+        }
+        if(!allowedTags.has(tag)){
+          const parent =
+            node.parentNode;
+          if(!parent){
+            node.remove();
+            return;
+          }
+          while(node.firstChild){
+            parent.insertBefore(
+              node.firstChild,
+              node
+            );
+          }
+          node.remove();
+          return;
+        }
+        Array
+          .from(node.attributes)
+          .forEach(attribute => {
+            const name =
+              attribute.name
+                .toLowerCase();
+            if(
+              tag !== 'A' ||
+              ![
+                'href',
+                'title'
+              ].includes(name)
+            ){
+              node.removeAttribute(
+                attribute.name
+              );
+            }
+          });
+        if(tag === 'A'){
+          const href =
+            String(
+              node.getAttribute(
+                'href'
+              ) || ''
+            ).trim();
+          let safeHref = '';
+          if(href){
+            try{
+              const parsed =
+                new URL(
+                  href,
+                  window.location.href
+                );
+              if(
+                [
+                  'http:',
+                  'https:',
+                  'mailto:',
+                  'tel:'
+                ].includes(
+                  parsed.protocol
+                    .toLowerCase()
+                )
+              ){
+                safeHref = href;
+              }
+            }catch(error){
+              safeHref = '';
+            }
+          }
+          if(safeHref){
+            node.setAttribute(
+              'href',
+              safeHref
+            );
+            node.setAttribute(
+              'target',
+              '_blank'
+            );
+            node.setAttribute(
+              'rel',
+              'noopener noreferrer'
+            );
+          }else{
+            node.removeAttribute(
+              'href'
+            );
+            node.removeAttribute(
+              'target'
+            );
+            node.removeAttribute(
+              'rel'
+            );
+          }
+        }
+        Array
+          .from(node.childNodes)
+          .forEach(cleanNode);
+      }
+      Array
+        .from(
+          template.content.childNodes
+        )
+        .forEach(cleanNode);
+      return template.innerHTML;
+    }
+    function richTextToPlainText(value){
+      const template =
+        document.createElement(
+          'template'
+        );
+      template.innerHTML =
+        sanitizeCatalogueRichText(
+          value || ''
+        );
+      return String(
+        template.content.textContent ||
+        ''
+      )
+        .replace(
+          /\s+/g,
+          ' '
+        )
+        .trim();
+    }
+    function closeCatalogueFloater(){
+      const floater =
+        document.getElementById(
+          'catalogueFloater'
+        );
+      const toggle =
+        document.getElementById(
+          'catalogueFloaterToggle'
+        );
+      const panel =
+        document.getElementById(
+          'catalogueFloaterPanel'
+        );
+      if(floater){
+        floater.classList.remove(
+          'is-open'
+        );
+      }
+      if(toggle){
+        toggle.setAttribute(
+          'aria-expanded',
+          'false'
+        );
+      }
+      if(panel){
+        panel.setAttribute(
+          'aria-hidden',
+          'true'
+        );
+      }
+    }
+    function openCatalogueFloater(){
+      const floater =
+        document.getElementById(
+          'catalogueFloater'
+        );
+      const toggle =
+        document.getElementById(
+          'catalogueFloaterToggle'
+        );
+      const panel =
+        document.getElementById(
+          'catalogueFloaterPanel'
+        );
+      if(floater){
+        floater.classList.add(
+          'is-open'
+        );
+      }
+      if(toggle){
+        toggle.setAttribute(
+          'aria-expanded',
+          'true'
+        );
+      }
+      if(panel){
+        panel.setAttribute(
+          'aria-hidden',
+          'false'
+        );
+      }
+    }
+    function setupCatalogueFloater(){
+      const floater =
+        document.getElementById(
+          'catalogueFloater'
+        );
+      const toggle =
+        document.getElementById(
+          'catalogueFloaterToggle'
+        );
+      if(!floater || !toggle){
+        return;
+      }
+      toggle.addEventListener(
+        'click',
+        event => {
+          event.stopPropagation();
+          if(
+            floater.classList.contains(
+              'is-open'
+            )
+          ){
+            closeCatalogueFloater();
+          }else{
+            openCatalogueFloater();
+          }
+        }
+      );
+      document.addEventListener(
+        'click',
+        event => {
+          if(
+            !floater.contains(
+              event.target
+            )
+          ){
+            closeCatalogueFloater();
+          }
+        }
+      );
+      document.addEventListener(
+        'keydown',
+        event => {
+          if(event.key === 'Escape'){
+            closeCatalogueFloater();
+          }
+        }
+      );
+    }
+    function renderCatalogueFloater(
+      catalogues,
+      currentCatalogue
+    ){
+      const list =
+        document.getElementById(
+          'catalogueFloaterList'
+        );
+      if(!list){
+        return;
+      }
+      const rows =
+        Array.isArray(catalogues)
+          ? catalogues
+              .filter(
+                item =>
+                  item &&
+                  item.active !== false &&
+                  String(
+                    item.slug || ''
+                  ).trim()
+              )
+              .sort(
+                (a, b) =>
+                  Number(
+                    a.displayOrder ??
+                    a.display_order ??
+                    9999
+                  ) -
+                  Number(
+                    b.displayOrder ??
+                    b.display_order ??
+                    9999
+                  )
+              )
+          : [];
+      if(!rows.length){
+        list.innerHTML = `
+          <div class="catalogue-floater-empty">
+            No catalogues available.
+          </div>
+        `;
+        return;
+      }
+      const currentSlug =
+        String(
+          currentCatalogue?.slug || ''
+        ).trim();
+      list.innerHTML =
+        rows
+          .map(
+            item => {
+              const slug =
+                String(
+                  item.slug || ''
+                ).trim();
+              const name =
+                String(
+                  item.name || slug
+                ).trim();
+              const isCurrent =
+                slug === currentSlug;
+              return `
+                <a
+                  class="
+                    catalogue-floater-link
+                    ${isCurrent ? 'is-current' : ''}
+                  "
+                  href="${
+                    isCurrent
+                      ? '#'
+                      : (
+                          'catalogue.html?catalogue=' +
+                          encodeURIComponent(slug)
+                        )
+                  }"
+                  ${
+                    isCurrent
+                      ? 'aria-current="page"'
+                      : ''
+                  }
+                  ${
+                    isCurrent
+                      ? 'onclick="event.preventDefault()"'
+                      : ''
+                  }
+                >
+                  <span
+                    class="catalogue-floater-current-dot"
+                    aria-hidden="true"
+                  ></span>
+                  <span>
+                    ${escapeHtml(name)}
+                  </span>
+                </a>
+              `;
+            }
+          )
+          .join('');
+    }
+    
+function playProductPulse(card) {
+  if (!card) return;
+
+  // Restart the pulse if triggered again.
+  card.classList.remove('product-card-pulse');
+  void card.offsetWidth;
+  card.classList.add('product-card-pulse');
+
+  // Remove the class once the animation finishes.
+  card.addEventListener('animationend', () => {
+    card.classList.remove('product-card-pulse');
+  }, { once: true });
+}
+
+    async function focusCatalogueProductFromUrl() {
+      const productId = new URLSearchParams(
+        window.location.search
+      ).get('product');
+      // Ordinary catalogue visits are unaffected.
+      if (!productId) return;
+      const productIndex = currentProductList.findIndex(
+        product => String(product.id) === String(productId)
+      );
+      // The requested product is not in this catalogue.
+      if (productIndex === -1) return;
+      /*
+      * If the product is beyond the initial 8 cards,
+      * expand the visible list enough to include it.
+      */
+      if (productIndex >= visibleProductCount) {
+        visibleProductCount = Math.min(
+          currentProductList.length,
+          Math.ceil(
+            (productIndex + 1) / PRODUCTS_PER_PAGE
+          ) * PRODUCTS_PER_PAGE
+        );
+        renderVisibleProducts();
+      }
+      // Allow the new cards to enter the DOM.
+      await new Promise(resolve =>
+        requestAnimationFrame(() =>
+          requestAnimationFrame(resolve)
+        )
+      );
+      const card = Array.from(
+        document.querySelectorAll(
+          '#products [data-product-card]'
+        )
+      ).find(element =>
+        element.getAttribute('data-product-card') === productId
+      );
+      if (!card) return;
+      // Centre the product card in the viewport.
+      const cardRect = card.getBoundingClientRect();
+      const targetTop =
+        window.scrollY +
+        cardRect.top -
+        (window.innerHeight - cardRect.height) / 2;
+      const reducedMotion = window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      ).matches;
+      window.scrollTo({
+        top: Math.max(0, targetTop),
+        behavior: reducedMotion ? 'instant' : 'smooth'
+      });
+      // Wait until smooth scrolling has settled.
+      await new Promise(resolve => {
+        if (reducedMotion) {
+          resolve();
+          return;
+        }
+        let lastY = window.scrollY;
+        let stableFrames = 0;
+        let finished = false;
+        const started = performance.now();
+        function checkScroll() {
+          if (finished) return;
+          const currentY = window.scrollY;
+          if (Math.abs(currentY - lastY) < 0.5) {
+            stableFrames++;
+          } else {
+            stableFrames = 0;
+          }
+          lastY = currentY;
+          // Allow scrolling to start before treating it as complete.
+          if (
+            (performance.now() - started > 150 && stableFrames >= 5) ||
+            performance.now() - started > 1800
+          ) {
+            finished = true;
+            resolve();
+            return;
+          }
+          requestAnimationFrame(checkScroll);
+        }
+        requestAnimationFrame(checkScroll);
+      });
+      // Pulse the destination product card.
+      playProductPulse(card);
+    }
+    async function initialiseCataloguePage(){
+      try{
+        /*
+         * script.js resolves this after
+         * Supabase store data has loaded.
+         */
+        await window.storeReady;
+        const catalogue =
+          getCurrentCatalogue();
+        renderCatalogueFloater(
+  Array.isArray(
+    STORE_DATA.catalogues
+  )
+    ? STORE_DATA.catalogues
+    : [],
+  catalogue
+);
+        const hero =
+          document.getElementById(
+            'catalogueHero'
+          );
+        const eyebrow =
+          document.getElementById(
+            'catalogueEyebrow'
+          );
+        const title =
+          document.getElementById(
+            'catalogueTitle'
+          );
+        const description =
+          document.getElementById(
+            'catalogueDescription'
+          );
+        const badge =
+          document.getElementById(
+            'catalogueBadge'
+          );
+        /*
+         * Invalid or inactive catalogue.
+         */
+        if(!catalogue){
+          document.title =
+            'Catalogue unavailable | Bloom & Pod';
+          hero.classList.remove(
+            'has-image'
+          );
+          eyebrow.textContent =
+            'Bloom & Pod';
+          title.textContent =
+            'Catalogue unavailable';
+          description.textContent =
+            'This catalogue could not be found or is currently unavailable.';
+          badge.classList.remove(
+            'visible'
+          );
+          const products =
+            document.getElementById(
+              'products'
+            );
+          if(products){
+            products.innerHTML = `
+              <div class="catalogue-invalid">
+                <p>
+                  Please return to the shop
+                  and choose another catalogue.
+                </p>
+                <p>
+                  <a
+                    class="btn"
+                    href="products.html"
+                  >
+                    Back to shop
+                  </a>
+                </p>
+              </div>
+            `;
+          }
+          const loadMore =
+            document.getElementById(
+              'load-more-products'
+            );
+          if(loadMore){
+            loadMore.style.display =
+              'none';
+          }
+          return;
+        }
+        /*
+         * Page metadata.
+         */
+        document.title =
+          catalogue.name +
+          ' | Bloom & Pod';
+        const metaDescription =
+          document.querySelector(
+            'meta[name="description"]'
+          );
+        if(metaDescription){
+          const plainCatalogueDescription =
+            richTextToPlainText(
+              catalogue.description || ''
+            );
+          metaDescription.setAttribute(
+            'content',
+            plainCatalogueDescription ||
+            (
+              'Shop ' +
+              catalogue.name +
+              ' at Bloom & Pod.'
+            )
+          );
+        }
+        /*
+         * Hero content.
+         */
+        eyebrow.textContent =
+          catalogue.eyebrow || '';
+        title.textContent =
+          catalogue.name || '';
+        description.innerHTML =
+          sanitizeCatalogueRichText(
+            catalogue.description || ''
+          );
+        /*
+         * Badge.
+         */
+        if(
+          String(
+            catalogue.badge || ''
+          ).trim()
+        ){
+          badge.textContent =
+            catalogue.badge;
+          badge.classList.add(
+            'visible'
+          );
+        }else{
+          badge.textContent =
+            '';
+          badge.classList.remove(
+            'visible'
+          );
+        }
+        /*
+         * Banner image.
+         */
+        if(
+          String(
+            catalogue.image || ''
+          ).trim()
+        ){
+          hero.style.backgroundImage =
+            `url("${normalizeImageUrl(
+              catalogue.image
+            )}")`;
+          hero.classList.add(
+            'has-image'
+          );
+        }else{
+          hero.style.backgroundImage =
+            '';
+          hero.classList.remove(
+            'has-image'
+          );
+        }
+        // Fade the populated header, filters and product count into view.
+        [
+          hero.querySelector('.container'),
+          document.querySelector('.shop-toolbar'),
+          document.getElementById('product-count'),
+          document.getElementById('load-more-products')?.parentElement
+        ].filter(Boolean).forEach((element, index) => {
+          element.style.setProperty('--catalogue-delay', `${index * 100}ms`);
+          element.classList.add('catalogue-page-enter');
+          element.addEventListener('animationend', event => {
+            if (event.animationName === 'cataloguePageFadeIn') {
+              element.classList.remove('catalogue-page-enter');
+              element.style.removeProperty('--catalogue-delay');
+            }
+          }, { once: true });
+        });
+
+        // Navigate to the product requested by Featured Carousel.
+        await focusCatalogueProductFromUrl();
+      }catch(error){
+        console.error(
+          'Catalogue page initialization failed:',
+          error
+        );
+      }
+    }
+    /* Apply the same entrance to each newly rendered product card.
+       Observe the grid because script.js rebuilds it for sorting,
+       filtering, and Load More. Do not change shared rendering logic. */
+    const catalogueProductGrid = document.getElementById('products');
+    if (catalogueProductGrid) {
+      const animateCatalogueCards = () => {
+        const cards = catalogueProductGrid.querySelectorAll(
+          '.product-card:not(.catalogue-card-enter)'
+        );
+        cards.forEach((card, index) => {
+          card.style.setProperty('--catalogue-delay',
+            `${Math.min(index, 7) * 100}ms`);
+          card.classList.add('catalogue-card-enter');
+          card.addEventListener('animationend', event => {
+            if (event.animationName === 'cataloguePageFadeIn') {
+              card.classList.remove('catalogue-card-enter');
+              card.style.removeProperty('--catalogue-delay');
+            }
+          });
+        });
+      };
+      new MutationObserver(animateCatalogueCards).observe(
+        catalogueProductGrid, { childList: true }
+      );
+      animateCatalogueCards();
+    }
+
+    setupCatalogueFloater();
+    initialiseCataloguePage();
+    history.scrollRestoration =
+      'manual';
+    window.scrollTo(
+      0,
+      0
+    );
+  </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bloom & Pod — Turnstile Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js"></script>
+    <script
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    async
+    defer
+  ></script>
+</head>
+<body>
+  <h2>Turnstile Verification Test</h2>
+  <div
+    class="cf-turnstile"
+    data-sitekey="0x4AAAAAAFU6dXrwYwQ9jCMZ"
+    data-action="create_order"
+    data-callback="onTurnstileSuccess"
+  ></div>
+  <script>
+    function onTurnstileSuccess(token) {
+      console.log("Turnstile token generated:", Boolean(token));
+      window.testTurnstileToken = token;
+      alert(
+        "Verification completed. Return to the browser console."
+      );
+    }
+  </script>
+</body>
+</html>

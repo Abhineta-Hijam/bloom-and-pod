@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Bloom & Pod — beautiful dried flowers, lotus pods and botanical arrangements.">
+  <title>Bloom & Pod | Natural Flowers & Botanical Decor</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<div id="announcement-bar" hidden>
+  <div class="announcement-track">
+    <span class="announcement-text"></span>
+  </div>
+</div>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html" aria-label="Bloom & Pod home">
+        <img class="logo" src="images/logo.png" alt="My Brand Logo">
+        <span id="site-store-name">Bloom &amp; Pod</span>
+      </a>
+      <button class="menu-toggle" aria-label="Open navigation" aria-expanded="false">☰</button>
+      <nav class="nav" aria-label="Primary navigation">
+        <details class="header-search" id="header-search">
+          <summary aria-label="Open product search" title="Search products">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+          </summary>
+
+          <div class="header-search-panel">
+            <label for="header-search-input">Search products</label>            
+            <div class="header-search-field">
+              <input
+                id="header-search-input"
+                type="search"
+                placeholder="Search plants, seeds, pods..."
+                autocomplete="off"
+              >
+              <button type="button" aria-label="View search results">
+                &rarr;
+              </button>
+            </div>
+            <div
+              id="header-search-results"
+              class="header-search-results"
+              aria-live="polite"
+              aria-label="Product search suggestions"
+              hidden
+            ></div>
+
+          </div>
+        </details>
+  <a class="active" href="index.html">Home</a>
+  <a href="products.html">Shop</a>
+  <a href="#about">About</a>
+  <a href="customer-order.html">Track Order</a>
+  <a class="cart-link" href="cart.html">
+    Cart <span class="cart-count">0</span>
+  </a>
+  </nav>
+    </div>
+  </header>
+  <main class="home-background">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow" id="hero-eyebrow">Natural • Timeless • Beautiful</p>
+          <h1 id="hero-title">Bring the beauty of nature home.</h1>
+          <p class="hero-text" id="hero-text">Discover plants, pods & gardening essentials selected to add warmth and character to every space.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" id="hero-button" href="products.html">Shop the collection</a>
+            <a class="btn btn-secondary" id="hero-secondary" href="#about">Our story</a>
+          </div>
+          <div class="trust-row">
+            <span>✓ Carefully packed</span>
+            <span>✓ Natural botanicals</span>
+            <span>✓ Small-batch selection</span>
+          </div>
+        </div>
+        <div class="hero-card">
+   <div class="hero-card">
+          <img id="hero-image">
+          <div class="hero-badge"><strong id="hero-badge-number">6</strong><span id="hero-badge-text">botanical<br>favourites</span></div>
+        </div>
+</div>
+      </div>
+    </section>
+    <section class="body" id="featured">
+  <div class="container">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow" id="featured-eyebrow">Featured collection</p>
+        <h2 id="featured-title">Made for beautiful arrangements</h2>
+      </div>
+      <a class="text-link" href="products.html">
+        View all →
+      </a>
+    </div>
+    <div class="featured-carousel" id="featured-carousel">
+      <div
+        class="featured-carousel-viewport"
+        id="featured-carousel-viewport"
+      >
+        <div
+          class="featured-carousel-track"
+          id="featured-products"
+        ></div>
+      </div>
+      <button
+        class="carousel-arrow carousel-arrow-prev"
+        id="featured-prev"
+        type="button"
+        aria-label="Previous featured product"
+      >
+        ←
+      </button>
+      <button
+        class="carousel-arrow carousel-arrow-next"
+        id="featured-next"
+        type="button"
+        aria-label="Next featured product"
+      >
+        →
+      </button>
+    </div>
+  </div>
+</section>
+    <section class="story section" id="about">
+      <div class="container story-grid">
+        <div class="story-image">
+  <img id="story-slider-image" src="images/lotus-pods.png" alt="Natural lotus pods">
+</div>
+        <div>
+          <p class="eyebrow" id="about-eyebrow">The Bloom &amp; Pod difference</p>
+          <h2 id="about-title">Simple botanicals. Lasting beauty.</h2>
+          <p id="about-text">We believe natural textures can transform a room without trying too hard. Our collection focuses on distinctive flowers and pods that work beautifully on their own or as part of a larger arrangement.</p>
+          <div class="feature-list">
+            <div><span>01</span><strong id="about-feature-1-title">Thoughtfully selected</strong><small id="about-feature-1-text">Pieces chosen for colour, shape and texture.</small></div>
+            <div><span>02</span><strong id="about-feature-2-title">Easy to style</strong><small id="about-feature-2-text">Perfect for vases, wreaths and creative projects.</small></div>
+            <div><span>03</span><strong id="about-feature-3-title">Packed with care</strong><small id="about-feature-3-text">Orders are prepared to help your botanicals arrive safely.</small></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="footer-above-cta">
+      <div class="container cta-inner">
+        <div><p class="eyebrow" id="cta-eyebrow">Ready to create?</p><h2 id="cta-title">Find your next favourite botanical.</h2></div>
+        <a class="btn btn-primary" id="cta-button" href="products.html">Explore products</a>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer" id="contact">
+    <div class="container footer-grid">
+      <div><a class="brand" href="index.html"><img class="logo" src="images/logo.png" alt="My Brand Logo"><span>Bloom &amp; Pod</span></a><p id="footer-tagline">Natural details for beautiful spaces.</p></div>
+      <div><h3>Shop</h3><a class="footer-policy-link" href="products.html">All products</a><a class="footer-policy-link" href="cart.html">Your cart</a></div>
+      <div><h3>Contact</h3><p><a class="footer-policy-link" id="contact-email" href="mailto:hello@bloomandpod.example">hello@bloomandpod.example</a></p><p id="contact-hours">Mon–Fri · 15:00–20:00</p></div>
+    </div>
+    <div class="container footer-policies" aria-label="Store policies">
+      <div class="footer-policies-heading">Policies</div>
+      <nav class="footer-policies-links" aria-label="Policy pages">
+      <a class="footer-policy-link" href="terms-and-conditions.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9z"/><path d="M8 3v6h6"/><path d="M8 14h8M8 18h8"/></svg>
+        <span>Terms &amp; Conditions</span>
+      </a>
+      <a class="footer-policy-link" href="cancellation-policy.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3"/><path d="M8 10h6M8 14h4"/><path d="m16 9 5 5m0-5-5 5"/></svg>
+        <span>Cancellation Policy</span>
+      </a>
+      <a class="footer-policy-link" href="refund-return-policy.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11a9 9 0 1 1 2.8 6.5"/><path d="M3 4v7h7"/><path d="m9 12 2 2 4-4"/></svg>
+        <span>Refund &amp; Return</span>
+      </a>
+      <a class="footer-policy-link" href="privacy-policy.html"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg><span>Privacy Policy</span></a></nav>
+      </nav>
+    </div>
+    <div class="container footer-bottom">
+  <span>
+    ©
+    <span id="year"></span>
+    Bloom &amp; Pod
+  </span>
+  <div class="footer-socials">
+    <a
+      href="#"
+      aria-label="Instagram"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img
+        src="images/instagram.png"
+        alt=""
+      >
+    </a>
+    <a
+      href="#"
+      aria-label="Youtube"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img
+        src="images/youtube.png"
+        alt=""
+      >
+    </a>
+    <a
+      href="#"
+      aria-label="WhatsApp"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img
+        src="images/whatsapp.png"
+        alt=""
+      >
+    </a>
+  </div>
+  <span>
+    Made with natural inspiration.
+  </span>
+</div>
+  </footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
+<script src="supabase-client.js"></script>
+<script src="script.js?v=2026-10-11.1"></script>
+<script>
+  history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+</script>
+</body>
+</html>

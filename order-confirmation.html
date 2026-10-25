@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Review and place your Bloom & Pod order.">
+<title>Confirm Order | Bloom & Pod</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+/* ORDER PROCESSING — FULL-SCREEN OVERLAY */
+.order-processing-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(15, 25, 18, 0.72);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.order-processing-overlay[hidden] {
+  display: none;
+}
+
+.order-processing-content {
+  width: 100%;
+  max-width: 440px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.order-processing-content h2 {
+  margin: 0 0 12px;
+  color: #ffffff;
+  font-size: clamp(22px, 5vw, 30px);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.order-processing-content p {
+  margin: 0;
+  color: #e0e9e1;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* THREE ANIMATED DOTS */
+.order-processing-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 28px;
+}
+
+.order-processing-dots span {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #a8d5ae;
+  animation: order-processing-pulse 1.2s ease-in-out infinite;
+}
+
+.order-processing-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.order-processing-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes order-processing-pulse {
+  0%, 60%, 100% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+
+  30% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .order-processing-dots span {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* ORDER CONFIRMATION — EXPANDABLE PRODUCT DETAILS */
+
+.review-product-expandable {
+  flex-wrap: wrap;
+}
+
+.review-product-info {
+  min-width: 0;
+}
+
+.review-product-price-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 7px;
+  flex-shrink: 0;
+}
+
+.review-product-details-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: transparent;
+  padding: 4px 0;
+  color: #277043;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.review-product-details-toggle:hover {
+  text-decoration: underline;
+}
+
+.review-product-details-toggle:focus-visible {
+  outline: 2px solid #277043;
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+.review-product-toggle-arrow {
+  display: inline-block;
+  transition: transform 280ms ease;
+}
+
+.review-product-details-toggle[aria-expanded="true"]
+.review-product-toggle-arrow {
+  transform: rotate(180deg);
+}
+
+.review-product-details-shell {
+  flex: 0 0 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 300ms ease,
+    opacity 250ms ease;
+}
+
+.review-product-details-shell.is-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.review-product-details-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.review-product-details-panel {
+  background: #f7f8f7;
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 12px;
+}
+
+.review-product-details-heading {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+.review-product-detail-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-size: 12px;
+}
+
+.review-product-detail-line span:first-child {
+  color: var(--muted);
+}
+
+.review-product-detail-line span:last-child {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.review-product-detail-divider {
+  height: 1px;
+  background: var(--line);
+  margin: 14px 0;
+}
+
+.review-product-detail-total {
+  margin-bottom: 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.review-product-detail-total span:first-child {
+  color: var(--ink);
+}
+
+.review-product-detail-total strong {
+  text-align: right;
+  color: #277043;
+}
+
+@media (max-width: 600px) {
+  .review-product-details-panel {
+    padding: 12px;
+  }
+
+  .review-product-detail-line {
+    font-size: 11px;
+  }
+
+  .review-product-detail-total {
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .review-product-details-shell,
+  .review-product-toggle-arrow {
+    transition: none;
+  }
+}
+
+/* ORDER CONFIRMATION — PRICE BREAKDOWN ALIGNMENT */
+
+.review-product-details-panel .review-product-detail-line {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  gap: 12px;
+  width: 100%;
+}
+
+.review-product-details-panel
+.review-product-detail-line > span:first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: left;
+}
+
+.review-product-details-panel
+.review-product-detail-line > span:last-child {
+  flex: 0 0 auto;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.review-product-details-panel
+.review-product-detail-total > strong {
+  flex: 0 0 auto;
+  margin-left: auto;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   ORDER CONFIRMATION — MOBILE RESPONSIVENESS
+   ========================================================= */
+
+/* Correct the overly broad product-row styling */
+#order-review .review-product .review-product-info {
+  display: grid;
+  gap: 4px;
+}
+
+/* Keep nested price-breakdown rows properly aligned */
+#order-review .review-product .review-product-detail-line {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+/* Prevent long product names from pushing prices offscreen */
+#order-review .review-product-info {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+#order-review .review-product-price-wrap {
+  flex-shrink: 0;
+}
+
+/* Allow grid children to shrink within their columns */
+#order-review .review-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#order-review .review-grid > .form-card {
+  min-width: 0;
+}
+
+/* Prevent verification-widget padding from wasting space */
+#order-review .turnstile-widget {
+  padding: 20px 0;
+}
+
+/* Tablet and mobile */
+@media (max-width: 800px) {
+
+  #order-review .review-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #order-review .review-grid > .form-card {
+    height: auto;
+  }
+
+  #order-review .review-notes {
+    grid-column: auto;
+  }
+
+  #order-review .form-card {
+    padding: 20px;
+  }
+
+  #order-review .form-card h2 {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+
+  #order-review .turnstile-widget {
+    padding: 16px 0;
+  }
+}
+
+/* Small mobile phones */
+@media (max-width: 480px) {
+
+  #order-review .form-card {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  #order-review .review-grid {
+    gap: 14px;
+  }
+
+  #order-review .form-card h2 {
+    font-size: 22px;
+  }
+
+  #order-review .review-product {
+    gap: 10px;
+  }
+
+  #order-review .review-product-info {
+    font-size: 13px;
+  }
+
+  #order-review .review-product-price-wrap {
+    font-size: 13px;
+  }
+
+  #order-review .review-details div {
+    grid-template-columns: minmax(0, 105px) minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  #order-review .review-details dt {
+    font-size: 10px;
+  }
+
+  #order-review .review-details dd {
+    font-size: 12px;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  #order-review .review-product-details-panel {
+    padding: 12px;
+  }
+
+  #order-review .review-product-detail-line {
+    font-size: 11px;
+    gap: 8px;
+  }
+
+  #order-review .review-product-detail-line > span:first-child {
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+
+  #order-review .review-product-detail-line > span:last-child,
+  #order-review .review-product-detail-total > strong {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-align: right;
+  }
+
+  #order-review .summary-line {
+    gap: 12px;
+    font-size: 12px;
+  }
+
+  #order-review .summary-line strong {
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+
+  #order-review .summary-total {
+    font-size: 16px;
+  }
+
+  #order-review .turnstile-widget {
+    padding: 12px 0;
+    max-width: 100%;
+  }
+}
+
+/* Razorpay payment button must remain hidden while disabled */
+#complete-payment-btn[hidden] {
+  display: none !important;
+}
+
+</style>
+</head>
+<body class="no-floating-cart">
+<header class="site-header">
+  <div class="container nav-wrap">
+    <a class="brand" href="index.html">
+      <img class="logo" src="images/logo.png" alt="My Brand Logo">
+      <span>Bloom &amp; Pod</span>
+    </a>
+    <button
+      class="menu-toggle"
+      aria-label="Open navigation"
+      aria-expanded="false"
+    >
+      ☰
+    </button>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="products.html">Shop</a>
+      <a href="index.html#contact">Contact</a>
+      <a class="cart-link" href="cart.html">
+        Cart
+        <span class="cart-count">0</span>
+      </a>
+    </nav>
+  </div>
+</header>
+<main>
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow">
+        Final review
+      </p>
+      <h1>
+        Confirm your order
+      </h1>
+      <p>
+        Please check your products, contact details,
+        delivery address and payment method before
+        placing the order.
+      </p>
+    </div>
+  </section>
+  <section class="section">
+    <div
+      class="container order-review"
+      id="order-review"
+    >
+      <div
+        id="review-error"
+        class="form-error"
+        role="alert"
+        hidden
+      ></div>
+      <div class="review-grid">
+        <section class="form-card">
+          <p class="eyebrow">
+            1 · Products
+          </p>
+          <h2>
+            Your Products
+          </h2>
+          
+<div id="review-products"></div>
+</section>
+
+<section class="form-card">
+  <p class="eyebrow">
+    2 · Order summary
+  </p>
+  <h2>
+    Price Summary
+  </h2>
+
+  <div class="summary-line">
+    <span>Subtotal</span>
+
+            <strong id="review-subtotal">
+              ₹0
+            </strong>
+          </div>
+          <div class="summary-line">
+            <span>Product GST</span>
+            <strong id="review-gst">₹0.00</strong>
+          </div>
+          <div class="summary-line">
+            <span>Handling charge</span>
+            <strong id="review-handling-charge">₹0.00</strong>
+          </div>
+          <div class="summary-line">
+            <span>Handling GST</span>
+            <strong id="review-handling-gst">₹0.00</strong>
+          </div>
+          <div class="summary-line">
+            <span>Delivery charge</span>
+            <strong id="review-delivery-charge">
+              —
+            </strong>
+          </div>
+          <div class="summary-line summary-total">
+            <span>Total</span>
+            <strong id="review-total">
+              ₹0
+            </strong>
+          </div>
+        </section>
+        <section class="form-card">
+          <p class="eyebrow">
+            3 · Contact
+          </p>
+          <h2>
+            Contact Details
+          </h2>
+          <dl
+            class="review-details"
+            id="review-contact"
+          ></dl>
+        </section>
+        <section class="form-card">
+          <p class="eyebrow">
+            4 · Delivery
+          </p>
+          <h2>
+            Shipping Address
+          </h2>
+          <dl
+            class="review-details"
+            id="review-address"
+          ></dl>
+        </section>
+        <section
+          class="form-card review-notes"
+          id="review-notes-card"
+        >
+          <p class="eyebrow">
+            5 · Order notes
+          </p>
+          <h2>
+            Notes
+          </h2>
+          <p id="review-notes">
+            —
+          </p>
+        </section>
+        <section class="form-card">
+          <p class="eyebrow">
+            6 · Payment
+          </p>
+          <h2>
+            Payment &amp; Verification
+          </h2>
+          <div
+  class="payment-summary"
+  id="review-payment"
+>
+  —
+</div>
+
+<!-- Secure checkout verification.
+     Hidden until the new gateway is ready. -->
+<div class="turnstile-widget" id="order-turnstile-section" hidden>
+  <div id="order-turnstile-widget"></div>
+</div>
+
+<!-- ================================================
+     BLOOM & POD — RAZORPAY SECURITY VERIFICATION
+     ================================================
+
+     Independent of COD Turnstile verification.
+
+     Razorpay action: create_razorpay_order
+     COD action: create_order
+
+     Remains hidden and inactive until the complete
+     online-payment system is approved for activation.
+
+     Do not render the Razorpay widget automatically.
+     ================================================ -->
+
+<div
+  id="razorpay-turnstile-section"
+  hidden
+  inert
+>
+  <div id="razorpay-turnstile-widget"></div>
+</div>
+
+</section>
+        
+      </div>
+      <div class="review-actions">
+  <a
+    class="btn btn-secondary"
+    href="checkout.html"
+  >
+    Back to checkout
+  </a>
+    <button
+    class="btn btn-primary place-order-final"
+    id="place-order-btn"
+    type="button"
+  >
+    Place order
+  </button>
+
+  <!-- Razorpay Online Payment — disabled until activation -->
+  <button
+    class="btn btn-primary"
+    id="complete-payment-btn"
+    type="button"
+    hidden
+    disabled
+  >
+    Complete Online Payment
+  </button>
+</div>
+      <p class="secure-note review-security">
+        By placing your order, you confirm that
+        the information above is correct.
+      </p>
+    </div>
+  </section>
+</main>
+<footer class="site-footer">
+    <div class="container footer-policies" aria-label="Store policies">
+      <div class="footer-policies-heading">Policies</div>
+      <nav class="footer-policies-links" aria-label="Policy pages">
+      <a class="footer-policy-link" href="terms-and-conditions.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9z"/><path d="M8 3v6h6"/><path d="M8 14h8M8 18h8"/></svg>
+        <span>Terms &amp; Conditions</span>
+      </a>
+      <a class="footer-policy-link" href="cancellation-policy.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3"/><path d="M8 10h6M8 14h4"/><path d="m16 9 5 5m0-5-5 5"/></svg>
+        <span>Cancellation Policy</span>
+      </a>
+      <a class="footer-policy-link" href="refund-return-policy.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11a9 9 0 1 1 2.8 6.5"/><path d="M3 4v7h7"/><path d="m9 12 2 2 4-4"/></svg>
+        <span>Refund &amp; Return</span>
+      </a>
+      <a class="footer-policy-link" href="privacy-policy.html"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg><span>Privacy Policy</span></a></nav>
+      </nav>
+    </div>
+  <div class="container footer-bottom">
+    <span>
+      ©
+      <span id="year"></span>
+      Bloom &amp; Pod
+    </span>
+    <a href="products.html">
+      Continue shopping
+    </a>
+  </div>
+</footer>
+
+<!-- ORDER PROCESSING OVERLAY -->
+<div
+  id="order-processing-overlay"
+  class="order-processing-overlay"
+  role="status"
+  aria-live="polite"
+  aria-label="Order processing"
+  hidden
+>
+  <div class="order-processing-content">
+    <div
+      class="order-processing-dots"
+      aria-hidden="true"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <h2>Your order is being processed</h2>
+
+    <p>
+      Please do not refresh, go back,
+      or close this window.
+    </p>
+  </div>
+</div>
+<!-- ========================================================
+     ORDER SUCCESS POPUP
+     This stays hidden until order-confirmation.js receives
+     a successful order response from the backend.
+     ======================================================== -->
+<div
+  class="order-success-modal"
+  id="order-success-modal"
+  hidden
+  aria-hidden="true"
+>
+  <div
+    class="order-success-box"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="order-success-title"
+    aria-describedby="order-success-message"
+  >
+    <div
+      class="order-success-icon"
+      aria-hidden="true"
+    >
+      ✓
+    </div>    
+    <h2 id="order-success-title">
+      Order Placed Successfully!
+    </h2>
+
+    <p id="order-success-message" style="text-align: center">
+      Thank you for shopping with Bloom &amp; Pod.<br>
+      Your order has been received.<br>
+      Please check your email for confirmation.
+    </p>
+
+    <div class="order-success-details">
+      <div class="order-success-detail">
+        <span>Order Number</span>
+        <strong id="order-success-number">—</strong>
+      </div>
+
+      <div class="order-success-detail">
+        <span>Order confirmation email</span>
+        <strong id="order-success-email">—</strong>
+      </div>
+    </div>
+
+    <div class="order-success-actions">
+      <button
+        class="btn btn-secondary"
+        id="order-success-home"
+        type="button"
+      >
+        Back to Home
+      </button>
+      <button
+        class="btn btn-primary"
+        id="order-success-track"
+        type="button"
+      >
+        Track Order
+      </button>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
+<script src="supabase-client.js"></script>
+<script src="script.js?v=2026-10-11.1"></script>
+<!-- Layer 1 & 2: Load the latest prepared secure-checkout frontend. -->
+<script src="order-confirmation.js?v=2026-10-16.1"></script>
+</body>
+</html>

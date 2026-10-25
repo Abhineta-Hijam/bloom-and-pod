@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="Read Bloom &amp; Pod terms and conditions for orders, product information, payments, shipping, website use, and customer assistance." name="description"/>
+<title>Terms &amp; Conditions | Bloom &amp; Pod</title>
+<link href="style.css" rel="stylesheet"/>
+<style>
+    .policy-main { padding: 55px 20px 85px; }
+    .policy-shell { max-width: 1060px; margin: auto; }
+    .policy-intro { margin-bottom: 28px; }
+    .policy-intro h1 { margin: 0 0 12px; font-family: "Playfair Display", Georgia, serif; font-size: clamp(29px, 4vw, 44px); line-height: 1.2; }
+    .policy-intro .eyebrow { margin-bottom: 10px; }
+    .policy-layout { display: grid; grid-template-columns: 245px minmax(0, 1fr); gap: 24px; align-items: start; }
+    .policy-toc, .policy-content { background: var(--paper, #fffdf9); border: 1px solid var(--line, #e7e1d6); border-radius: 18px; }
+    .policy-toc { position: sticky; top: 94px; padding: 18px; }
+    .policy-toc h2 { font-size: 14px; margin: 0 0 13px; }
+    .policy-toc nav { display: grid; gap: 5px; }
+    .policy-toc a { display: block; font-size: 12px; padding: 7px 9px; border-radius: 7px; color: var(--muted, #687268); line-height: 1.5; }
+    .policy-toc a:hover, .policy-toc a:focus-visible { background: #edf4ec; color: var(--ink, #253126); }
+    .policy-content { min-width: 0; padding: clamp(20px, 4vw, 40px); font-size: 14px; line-height: 1.8; overflow-wrap: anywhere; }
+    .policy-content h1 { display: none; }
+    .policy-content h2 { color: var(--ink, #253126); font-size: 21px; margin: 36px 0 12px; padding-top: 20px; border-top: 1px solid var(--line, #e7e1d6); scroll-margin-top: 95px; }
+    .policy-content h2:first-of-type { margin-top: 25px; }
+    .policy-content h3 { font-size: 16px; margin: 24px 0 9px; scroll-margin-top: 95px; }
+    .policy-content p { margin: 0 0 15px; }
+    .policy-content ul, .policy-content ol { padding-left: 25px; margin: 0 0 20px; }
+    .policy-content li { padding-left: 2px; margin-bottom: 5px; }
+    .policy-content strong { color: var(--ink, #253126); }
+    .policy-footer-link { display: inline-flex; align-items: center; gap: 7px; color: #dfe5dd; text-decoration: underline; text-underline-offset: 3px; }
+    .policy-footer-link svg { width: 16px; height: 16px; flex: 0 0 16px; }
+    .policy-footer-link:hover { color: #fff; }
+    @media (max-width: 800px) {
+      .policy-main { padding: 34px 14px 55px; }
+      .policy-layout { grid-template-columns: 1fr; }
+      .policy-toc { position: static; }
+      .policy-toc nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 520px) { .policy-toc nav { grid-template-columns: 1fr; } }
+/* Compact, readable contents navigation on all screen sizes */
+.policy-toc { padding: 18px; }
+.policy-toc h2 { margin-bottom: 8px; }
+.policy-toc nav { gap: 2px; }
+.policy-toc a { padding: 7px 9px; line-height: 1.35; }
+@media (max-width: 520px) { .policy-toc a { font-size: 12px; } }
+/* TERMS PAGE — STATIC PRODUCT DEMONSTRATION (not linked to the store) */
+.terms-demo {
+  margin: 18px 0 24px;
+}
+.terms-demo-viewport {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+.terms-demo-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--line, #e7e1d6);
+  border-radius: 12px;
+  background: #fff;
+}
+.terms-demo-card img {
+  display: block;
+  width: 100%;
+  height: 112px;
+  object-fit: cover;
+  background: #f7f3eb;
+}
+.terms-demo-info {
+  padding: 9px 10px 11px;
+}
+.terms-demo-category {
+  color: var(--muted, #687268);
+  font-size: 10px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.terms-demo-name {
+  margin: 2px 0 5px;
+  font-size: 13px;
+  line-height: 1.35;
+  font-weight: 700;
+}
+.terms-demo-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.terms-demo-price { font-size: 12px; font-weight: 700; }
+.terms-demo-units { font-size: 10px; font-weight: 400; color: var(--muted, #687268); }
+.terms-demo-add {
+  display: inline-block;
+  padding: 5px 7px;
+  border-radius: 7px;
+  background: #eef2eb;
+  color: #4e644c;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: default;
+  user-select: none;
+}
+@media (max-width: 900px) {
+  .terms-demo-viewport {
+    display: flex;
+    overflow-x: auto;
+    gap: 11px;
+    padding-bottom: 10px;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+  .terms-demo-card {
+    flex: 0 0 180px;
+    scroll-snap-align: start;
+  }
+}
+/* DEMO PRODUCT IMAGE DISCLAIMER */
+.demo-image-disclaimer {
+  margin: 0 0 6px;
+  text-align: right;
+  font-size: 10px;
+  font-style: italic;
+  font-weight: 400;
+  color: #c0392b;
+  line-height: 1.4;
+}
+/* Independent scroll for policy table of contents */
+@media (min-width: 801px) {
+  .policy-toc {
+    max-height: calc(100vh - 115px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #a7b8a3 transparent;
+  }
+  .policy-toc::-webkit-scrollbar {
+    width: 5px;
+  }
+  .policy-toc::-webkit-scrollbar-thumb {
+    background: #a7b8a3;
+    border-radius: 10px;
+  }
+  .policy-toc::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+</style>
+</head>
+<body>
+<header class="site-header">
+<div class="container nav-wrap">
+<a aria-label="Bloom &amp; Pod home" class="brand" href="index.html">
+<img alt="Bloom &amp; Pod logo" class="logo" src="images/logo.png"/>
+<span>Bloom &amp; Pod</span>
+</a>
+<button aria-controls="policy-mobile-nav" aria-expanded="false" aria-label="Open navigation" class="menu-toggle" type="button">☰</button>
+<nav aria-label="Primary navigation" class="nav" id="policy-mobile-nav">
+<a href="index.html">Home</a>
+<a href="products.html">Shop</a>
+<a href="customer-order.html">Track Order</a>
+<a href="cart.html">Cart <span class="cart-count">0</span></a>
+</nav>
+</div>
+</header>
+<main class="policy-main">
+<div class="policy-shell">
+<div class="policy-intro">
+<p class="eyebrow">Bloom &amp; Pod | Store Information</p>
+<h1>Terms &amp; Conditions</h1>
+</div>
+<div class="policy-layout">
+<aside aria-label="Policy sections" class="policy-toc">
+<h2>On this page</h2>
+<nav aria-label="Policy table of contents"><a href="#general">1. General Information</a><a href="#policy-products">2. Products and Natural Variations</a><a href="#product-classification">2.1 Product Classification</a><a href="#prices">3. Pricing, GST and Charges</a><a href="#orders">4. Orders and Customer Details</a><a href="#quantities">5. Minimum Quantities and Purchase Limits</a><a href="#payment">6. Payment Methods</a><a href="#shipping">7. Shipping and Delivery</a><a href="#tracking">8. Order Tracking and Notifications</a><a href="#cancellations">9. Order Cancellations</a><a href="#returns">10. Returns, Refunds and Replacements</a><a href="#use">11. Permitted Website Use</a><a href="#content">12. Website Content and Intellectual Property</a><a href="#privacy">13. Privacy and Customer Information</a><a href="#limitations">14. Service Availability and Responsibility</a><a href="#updates">15. Changes to These Terms</a><a href="#contact">16. Customer Support and Applicable Law</a></nav>
+</aside>
+<article class="policy-content"><h1>Terms &amp; Conditions</h1><p>These terms set out the general conditions for shopping with Bloom &amp; Pod. Please also read our separate <strong><u><a href="privacy-policy.html">Privacy Policy</a></u></strong>, <strong><u><a href="cancellation-policy.html">Cancellation Policy</a></u></strong> and <strong><u><a href="refund-return-policy.html">Refund &amp; Return Policy</a></u></strong> for the rules that apply to those requests.</p><h2 id="general">1. General Information</h2><p>Welcome to Bloom &amp; Pod. These Terms &amp; Conditions explain the general conditions for using our website and purchasing our products. Please read them before placing an order. By using the website or making a purchase, <strong>you agree</strong> to these terms, subject to applicable consumer protection laws.</p><p>In these terms, “we”, “us”, and “our” refer to Bloom &amp; Pod. “Customer” and “you” refer to visitors and buyers using the website.</p>
+<p class="demo-image-disclaimer">
+  * Images are for representation purposes only.
+</p>
+<div class="terms-demo" aria-label="Illustrative product examples, not live listings">
+  <div class="terms-demo-viewport">
+    <div class="terms-demo-card">
+      <img src="images/stock-plant.png" alt="Illustrative image of Product A" loading="lazy">
+      <div class="terms-demo-info">
+        <div class="terms-demo-category">Category A</div>
+        <div class="terms-demo-name">Product A</div>
+        <div class="terms-demo-bottom">
+          <span class="terms-demo-price">₹99 <span class="terms-demo-units">/ 10 units</span></span>
+          <span class="terms-demo-add" aria-hidden="true">Add Units</span>
+        </div>
+      </div>
+    </div>
+    <div class="terms-demo-card">
+      <img src="images/stock-plant.png" alt="Illustrative image of Product B" loading="lazy">
+      <div class="terms-demo-info">
+        <div class="terms-demo-category">Category B</div>
+        <div class="terms-demo-name">Product B</div>
+        <div class="terms-demo-bottom">
+          <span class="terms-demo-price">₹49 <span class="terms-demo-units">/ 5 units</span></span>
+          <span class="terms-demo-add" aria-hidden="true">Add Units</span>
+        </div>
+      </div>
+    </div>
+    <div class="terms-demo-card">
+      <img src="images/stock-plant.png" alt="Illustrative image of Product C" loading="lazy">
+      <div class="terms-demo-info">
+        <div class="terms-demo-category">Category C</div>
+        <div class="terms-demo-name">Product C</div>
+        <div class="terms-demo-bottom">
+          <span class="terms-demo-price">₹69 <span class="terms-demo-units">/ 8 units</span></span>
+          <span class="terms-demo-add" aria-hidden="true">Add Units</span>
+        </div>
+      </div>
+    </div>
+    <div class="terms-demo-card">
+      <img src="images/stock-plant.png" alt="Illustrative image of Product D" loading="lazy">
+      <div class="terms-demo-info">
+        <div class="terms-demo-category">Category D</div>
+        <div class="terms-demo-name">Product D</div>
+        <div class="terms-demo-bottom">
+          <span class="terms-demo-price">₹109 <span class="terms-demo-units">/ 6 units</span></span>
+          <span class="terms-demo-add" aria-hidden="true">Add Units</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<h2 id="policy-products">2. Products and Natural Variations</h2><p>Bloom &amp; Pod offers products such as plants, saplings, flowers, seeds, organic pods, plant care supplies, gardening tools, and related goods. We aim to describe and photograph products accurately.</p><p>Because many items are natural or living products, variations in size, colour, shape, growth stage, bloom, texture, or appearance may occur. Minor natural differences are not necessarily defects, provided the products remain consistent with their descriptions.</p><p>Availability can vary due to stock levels, seasonality, sourcing, and operational conditions. If an item cannot be supplied after an order has been placed, we will contact you to discuss an appropriate resolution, including a refund where applicable. We will not substitute a different product without your agreement.</p><h3 id="product-classification">2.1 Product Classification: Perishable and Non-Perishable Goods</h3>
+<p>For the purposes of our store policies, Bloom &amp; Pod generally groups products into the following three categories. This classification guides handling and claim assessment; it does not, by itself, determine eligibility for a refund, return or replacement.</p>
+<p><strong>A. Perishable and Living Products</strong></p>
+<ul>
+<li>Live plants, saplings and live plant cuttings.</li>
+<li>Fresh flowers and fresh floral arrangements.</li>
+<li>Other fresh or living botanical products that may deteriorate or change quickly without appropriate care.</li>
+</ul>
+<p>These products require suitable handling, storage and care. Their return, refund and replacement eligibility is subject to the <a href="refund-return-policy.html">Refund &amp; Return Policy</a> and applicable law.</p>
+<p><strong>B. Non-Perishable Products</strong></p>
+<ul>
+<li>Gardening tools, pots, planters, containers and accessories.</li>
+<li>Sealed or packaged plant-care products designed for storage.</li>
+<li>Suitable packaged organic manure, compost and vermicompost, when their labeling and storage requirements support longer-term storage.</li>
+<li>Other durable gardening supplies.</li>
+</ul>
+<p>These products may be considered for return, refund or replacement under the applicable product-specific conditions and relevant law.</p>
+<p><strong>C. Seeds, Dried Botanical Products and Other Organic Materials</strong></p>
+<ul>
+<li>Heirloom seeds and commercially packaged seeds.</li>
+<li>Organic pods, dried flowers and dried botanical materials.</li>
+<li>Other naturally derived goods whose shelf life or storage requirements differ by product.</li>
+</ul>
+<p>These items are assessed according to their condition, packaging, expected shelf life, storage needs and product-specific characteristics. They are not automatically classified as perishable merely because they are organic or naturally derived.</p>
+<p><strong>Important:</strong> Claims involving damaged, defective, incorrect, missing or materially misdescribed products are considered under the <a href="refund-return-policy.html">Refund &amp; Return Policy</a> and applicable consumer protection laws. Product classification alone does not automatically approve or exclude any claim.</p>
+<h2 id="prices">3. Pricing, GST and Charges</h2><p>Prices are shown in Indian Rupees (INR). The final checkout summary will display applicable GST, shipping or delivery fees, and other disclosed charges before the customer confirms an order.</p><p>We may update prices and offers prospectively. If a material pricing error affects an order already submitted, we will contact the customer and offer an appropriate resolution in accordance with applicable law rather than applying an undisclosed additional charge.</p><h2 id="orders">4. Orders and Customer Details</h2><p>Customers must provide accurate order information, including their name, email address, contact number, shipping address, PIN code, and any relevant delivery instructions. Inaccurate or incomplete information may delay or prevent delivery.</p><p>An order acknowledgment confirms that an order has been received. Fulfilment may still depend on inventory, payment confirmation (where applicable), and delivery feasibility. If an order cannot be fulfilled, we will contact the customer and resolve the affected portion appropriately.</p><h2 id="quantities">5. Minimum Quantities and Purchase Limits</h2><p>Some products are sold subject to a minimum purchase quantity or a maximum quantity per order. The applicable requirements will be displayed in the product listing or checkout process.</p><p>Customers should review quantities carefully before confirming their orders.</p><h2 id="payment">6. Payment Methods</h2><p>Available payment options may include Cash on Delivery (COD), online payment, or other methods displayed at checkout. Availability may vary by product, delivery area, or order conditions.</p><p>Online payments are subject to the relevant payment provider's processing and confirmation. For COD orders, the amount due must be paid using the method communicated during checkout or delivery. Customers must not provide false payment information or misleading transaction evidence.</p><h2 id="shipping">7. Shipping and Delivery</h2><p>We aim to prepare, pack, dispatch, and deliver orders within reasonable timeframes. Any delivery timeframe shown on the website or communicated by our team is an estimate unless expressly stated otherwise.</p><p>Actual delivery may be affected by product availability, delivery destination, courier operations, weather, transport conditions, public holidays, or other circumstances outside our reasonable control. We will communicate material issues when reasonably practicable.</p><p>Customers should ensure that someone is available to receive the delivery when required. If a delivery cannot be completed because of incorrect details or repeated unsuccessful delivery attempts, we will contact the customer about the available next steps and any lawful charges that have been disclosed.</p><h2 id="tracking">8. Order Tracking and Notifications</h2><p>Customers may check the latest recorded order status on the <a href="customer-order.html">Track Order</a> page using their Order ID and the email address registered with the order.</p><p>Tracking information and timestamps reflect the information available to our system. Where a courier tracking ID is provided, customers may use it for further shipment information. Updates sent by email or displayed on the tracking page may be delayed by operational or technical conditions.</p><p>Customers are responsible for keeping their Order ID and contact information reasonably secure.</p><h2 id="cancellations">9. Order Cancellations</h2><p>Cancellation is subject to our separate <a href="cancellation-policy.html">Cancellation Policy</a>. Under the standard self-service process, customers may cancel an order only while its status is <strong>New</strong>, <strong>Processing</strong>, or <strong>Packed</strong>.</p><p>Customer-initiated cancellation requires verification of the registered phone number and submission of a cancellation reason. Once an order is shipped, the standard cancellation option is unavailable. Refer to the Cancellation Policy for complete requirements.</p><h2 id="returns">10. Returns, Refunds and Replacements</h2><p>Eligibility for returns, refunds, and replacements, reporting windows, evidence requirements, and product-specific conditions are explained in our <a href="refund-return-policy.html">Refund &amp; Return Policy</a>.</p><p>Living and perishable products may require prompt inspection and reporting because their condition can change after delivery. Nothing in these terms or the linked policy limits consumer rights or remedies that cannot lawfully be restricted.</p><h2 id="use">11. Permitted Website Use</h2><p>Customers must use the website lawfully and must not attempt to interfere with its operation, gain unauthorised access to accounts or systems, submit fraudulent orders, or misuse order tracking and verification features.</p><p>We may take proportionate steps to prevent abuse, including reasonable access restrictions or investigation of suspected fraudulent activity, subject to applicable law.</p><h2 id="content">12. Website Content and Intellectual Property</h2><p>Unless otherwise indicated, the website's branding, text, graphics, product descriptions, and original design elements are owned by Bloom &amp; Pod or used with appropriate permission.</p><p>Customers may view the website for personal shopping and information purposes. Unauthorised copying, republication, or commercial use of protected materials is not permitted except as allowed by law or with the rights holder's permission.</p><h2 id="privacy">13. Privacy and Customer Information</h2><p>We collect and use customer information as reasonably necessary to process orders, arrange delivery, communicate updates, provide support, and protect our services. Order tracking may display masked contact or delivery details to reduce unnecessary exposure of personal information.</p><p>Additional details about collection, storage, use, retention, and customer privacy rights should be set out in a separate Privacy Policy when published. We will comply with applicable data protection requirements.</p><h2 id="limitations">14. Service Availability and Responsibility</h2><p>We take reasonable care in operating the website, but online services may occasionally be interrupted by maintenance, outages, or technical issues. We do not guarantee uninterrupted website availability.</p><p>Nothing in these Terms &amp; Conditions excludes liability, statutory guarantees, or consumer rights that cannot legally be excluded. Any limitation of responsibility applies only to the extent permitted by applicable law.</p><h2 id="updates">15. Changes to These Terms</h2><p>We may revise these Terms &amp; Conditions as our services, policies, or applicable requirements change. Updated terms will be published on this page with an updated effective date when appropriate.</p><p>Changes will not remove rights already accrued under applicable law or retrospectively alter a completed purchase in a way that is legally impermissible.</p><h2 id="contact">16. Customer Support and Applicable Law</h2><p>For questions about your order or these terms, please contact Bloom &amp; Pod customer support at <strong>[Insert official support email]</strong>.</p><p>These terms are intended for the operation of a business serving customers in India and are subject to applicable Indian laws, including mandatory consumer protection rights and available legal remedies.</p></article>
+</div>
+</div>
+</main>
+<footer class="site-footer">
+<div aria-label="Store policies" class="container footer-policies">
+<div class="footer-policies-heading">Policies</div>
+<nav aria-label="Policy pages" class="footer-policies-links">
+<a aria-current="page" class="footer-policy-link" href="terms-and-conditions.html">
+<svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9z"></path><path d="M8 3v6h6"></path><path d="M8 14h8M8 18h8"></path></svg>
+<span>Terms &amp; Conditions</span>
+</a>
+<a class="footer-policy-link" href="cancellation-policy.html">
+<svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24"><path d="M21 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3"></path><path d="M8 10h6M8 14h4"></path><path d="m16 9 5 5m0-5-5 5"></path></svg>
+<span>Cancellation Policy</span>
+</a>
+<a class="footer-policy-link" href="refund-return-policy.html">
+<svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24"><path d="M3 11a9 9 0 1 1 2.8 6.5"></path><path d="M3 4v7h7"></path><path d="m9 12 2 2 4-4"></path></svg>
+<span>Refund &amp; Return</span>
+</a>
+<a class="footer-policy-link" href="privacy-policy.html"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg><span>Privacy Policy</span></a></nav>
+</nav>
+</div>
+<div class="container footer-bottom">
+<span>© <span id="year"></span> Bloom &amp; Pod</span>
+<span>Made with natural inspiration.</span>
+</div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
+<script src="supabase-client.js"></script>
+<script src="script.js?v=2026-10-11.1"></script>
+</body>
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <title>Checkout | Bloom & Pod</title>
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+</head>
+<body class="no-floating-cart">
+<header class="site-header">
+  <div class="container nav-wrap">
+    <a
+      class="brand"
+      href="index.html"
+    >
+      <img
+        class="logo"
+        src="images/logo.png"
+        alt="My Brand Logo"
+      >
+      <span>
+        Bloom &amp; Pod
+      </span>
+    </a>
+    <button
+      class="menu-toggle"
+      aria-label="Open navigation"
+      aria-expanded="false"
+    >
+      ☰
+    </button>
+    <nav class="nav">
+      <a href="index.html">
+        Home
+      </a>
+      <a href="products.html">
+        Shop
+      </a>
+      <a href="index.html#about">
+        About
+      </a>
+      <a href="index.html#contact">
+        Contact
+      </a>
+      <a
+        class="cart-link"
+        href="cart.html"
+      >
+        Cart
+        <span class="cart-count">
+          0
+        </span>
+      </a>
+    </nav>
+  </div>
+</header>
+<main>
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow">
+        Almost there
+      </p>
+      <h1>
+        Checkout
+      </h1>
+      <p>
+        Enter your details and review your order before submitting it.
+      </p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container checkout-layout">
+      <form
+        class="checkout-form"
+        id="checkout-form"
+        novalidate
+      >
+        <!-- =========================================
+             1. CUSTOMER DETAILS
+        ========================================== -->
+        <div class="form-card">
+          <p class="eyebrow">
+            1 · Your details
+          </p>
+          <h2>
+            Contact information
+          </h2>
+          <div class="form-grid">
+            <label>
+              Full name
+              <span>*</span>
+              <input
+                name="name"
+                autocomplete="name"
+                required
+                placeholder="Your full name"
+              >
+            </label>
+            <label>
+              Email address
+              <span>*</span>
+              <input
+                type="email"
+                name="email"
+                autocomplete="email"
+                required
+                placeholder="you@example.com"
+              >
+            </label>
+            <label>
+              Contact number
+              <span>*</span>
+              <input
+                type="tel"
+                name="phone"
+                autocomplete="tel"
+                required
+                placeholder="+91 98765 43210"
+              >
+            </label>
+            <label>
+              Alternate contact
+              <small>
+                (optional)
+              </small>
+              <input
+                type="tel"
+                name="alternatePhone"
+                placeholder="Optional"
+              >
+            </label>
+          </div>
+        </div>
+        <!-- =========================================
+             2. DELIVERY
+        ========================================== -->
+        <div class="form-card">
+          <p class="eyebrow">
+            2 · Delivery
+          </p>
+          <h2>
+            Shipping address
+          </h2>
+          <div class="form-grid">
+            <label class="full">
+              <span class="field-label">
+                Address line 1
+                <span class="required">*</span>
+              </span>
+              <input
+                name="address1"
+                autocomplete="address-line1"
+                required
+                placeholder="House / building / street"
+              >
+            </label>
+            <label class="full">
+              <span class="field-label">
+                Address line 2
+                <small>(optional)</small>
+              </span>
+              <input
+                name="address2"
+                autocomplete="address-line2"
+                placeholder="Apartment, building, area, etc."
+              >
+            </label>
+            <label>
+              <span class="field-label">
+                City
+                <span class="required">*</span>
+              </span>
+              <input
+                name="city"
+                autocomplete="address-level2"
+                required
+              >
+            </label>
+            <label>
+              <span class="field-label">
+                PIN code
+                <span class="required">*</span>
+              </span>
+              <input
+                id="checkout-pincode"
+                name="pincode"
+                type="text"
+                inputmode="numeric"
+                autocomplete="off"
+                pattern="[0-9]{6}"
+                maxlength="6"
+                required
+                placeholder="6-digit PIN"
+              >
+              <span
+                id="pincode-status"
+                class="delivery-status"
+                aria-live="polite"
+              ></span>
+            </label>
+            <label>
+              <span class="field-label">
+                State
+                <span class="required">*</span>
+              </span>
+              <input
+                id="checkout-state"
+                name="state"
+                type="text"
+                readonly
+                tabindex="-1"
+                placeholder="Selected automatically from PIN code"
+                required
+              >
+            </label>
+            <label>
+              <span class="field-label">
+                Country
+                <span class="required">*</span>
+              </span>
+              <input
+                name="country"
+                value="India"
+                autocomplete="country-name"
+                readonly
+                tabindex="-1"
+              >
+            </label>
+            <label class="full">
+              <span class="field-label">
+                Landmark
+                <small>(optional)</small>
+              </span>
+              <input
+                name="landmark"
+                placeholder="Nearby landmark"
+              >
+            </label>
+          </div>
+          <label class="checkbox-row">
+            <input
+              type="checkbox"
+              name="billingSame"
+              checked
+            >
+            Billing address is the same as delivery address
+          </label>
+        </div>
+        <!-- =========================================
+             3. PAYMENT
+        ========================================== -->
+        <div class="form-card">
+          <p class="eyebrow">
+            3 · Payment
+          </p>
+          <h2>
+            Payment method
+          </h2>
+          <label class="payment-option">
+            <input
+              type="radio"
+              name="paymentMethod"
+              value="Cash on Delivery"
+              checked
+            >
+            <span>
+              <strong>
+                Cash on Delivery
+              </strong>
+              <small>
+                Pay when your order is delivered.
+              </small>
+            </span>
+          </label>
+          
+<!-- =====================================================
+     RAZORPAY INTEGRATION REMINDER
+     =====================================================
+     Online payment remains disabled until:
+     1. Razorpay Test Mode integration is completed.
+     2. Server-side payment verification is implemented.
+     3. Webhook authentication and reconciliation work.
+     4. Payment capture and order finalization are tested.
+     5. The complete workflow receives approval.
+
+     Do not remove "disabled" merely because API
+     credentials have been configured.
+     ===================================================== -->
+<label class="payment-option">
+  <input
+    type="radio"
+    name="paymentMethod"
+    value="Online"
+    disabled
+  >
+  <span>
+    <strong>
+      Online
+    </strong>
+    <small>
+      Online payments — coming soon.
+    </small>
+  </span>
+</label>
+
+        </div>
+        <!-- =========================================
+             4. ORDER NOTES
+        ========================================== -->
+        <div class="form-card">
+          <p class="eyebrow">
+            4 · Order notes
+          </p>
+          <h2>
+            Anything we should know?
+          </h2>
+          <label>
+            Order notes
+            <small>
+              (optional)
+            </small>
+            <textarea
+              name="notes"
+              rows="4"
+              placeholder="Delivery instructions, preferred time, special requests..."
+            ></textarea>
+          </label>
+        </div>
+        <div
+          id="checkout-error"
+          class="form-error"
+          role="alert"
+          hidden
+        ></div>
+        <button
+          class="btn btn-primary submit-order"
+          type="submit"
+        >
+          Review order
+        </button>
+        <p class="secure-note">
+          Review your order on the next page before placing it.
+        </p>
+      </form>
+      <aside
+        class="summary checkout-summary"
+        id="checkout-summary"
+        aria-live="polite"
+      ></aside>
+    </div>
+  </section>
+</main>
+<footer class="site-footer">
+    <div class="container footer-policies" aria-label="Store policies">
+      <div class="footer-policies-heading">Policies</div>
+      <nav class="footer-policies-links" aria-label="Policy pages">
+      <a class="footer-policy-link" href="terms-and-conditions.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9z"/><path d="M8 3v6h6"/><path d="M8 14h8M8 18h8"/></svg>
+        <span>Terms &amp; Conditions</span>
+      </a>
+      <a class="footer-policy-link" href="cancellation-policy.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3"/><path d="M8 10h6M8 14h4"/><path d="m16 9 5 5m0-5-5 5"/></svg>
+        <span>Cancellation Policy</span>
+      </a>
+      <a class="footer-policy-link" href="refund-return-policy.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11a9 9 0 1 1 2.8 6.5"/><path d="M3 4v7h7"/><path d="m9 12 2 2 4-4"/></svg>
+        <span>Refund &amp; Return</span>
+      </a>
+      <a class="footer-policy-link" href="privacy-policy.html"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg><span>Privacy Policy</span></a></nav>
+      </nav>
+    </div>
+  <div class="container footer-bottom">
+    <span>
+      ©
+      <span id="year"></span>
+      Bloom &amp; Pod
+    </span>
+    <a href="cart.html">
+      Back to cart
+    </a>
+  </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
+<script src="supabase-client.js"></script>
+<script src="script.js?v=2026-10-11.1"></script>
+<script src="checkout.js?v=2026-10-16.0"></script>
+</body>
+</html>
